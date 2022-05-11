@@ -38,6 +38,15 @@ export default {
     '@nuxtjs/axios',
   ],
 
+  auth: {
+    strategies: {
+      'laravelSanctum': {
+        provider: 'laravel/sanctum',
+        url: 'http://localhost:8000'
+      }
+    }
+  },
+
   axios: {
     baseURL: 'http://localhost:8000',
     credentials: true,
