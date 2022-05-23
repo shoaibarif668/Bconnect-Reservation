@@ -1,27 +1,35 @@
 <template>
-  <div class="mx-auto flex">
-    <div class="w-full my-10">
-      <h1 class="text-green-400 text-xl font-bold mb-3 text-center w-full">Beauty Connect</h1>
-      <div class="flex mx-auto w-full">
-        <UploadRecordsComponent>
-        </UploadRecordsComponent>
-      </div>
+  <div class="">
+    <NavbarComponent />
+    <div class="w-full min-h-3/4 border-2 border-gray-200 bg-gray-100 rounded">
+      <FormsTemplate />
     </div>
-      
+      <Footer/>
   </div>
 </template>
 
 <script>
 export default {
   name: 'IndexPage',
-  methods: {
-    async apiCall() {
-      const response = await this.$axios.$get('/campaign');
-      console.log(response);
+  data() {
+    return {
+      showUploadForm: false,
+      showCampaignForm: false,
     }
   },
-  mounted() {
-    this.apiCall();
-  }
+  methods: {
+    showUploadRecords: function() {
+      this.showUploadForm = true;
+      this.showCampaignForm = false;
+    },
+    showCreateCampaign: function() {
+      this.showUploadForm = false;
+      this.showCampaignForm = true;
+    },
+    closeCurrentForm: function() {
+      this.showUploadForm = false;
+      this.showCampaignForm = false;
+    }
+  },
 }
 </script>

@@ -13,6 +13,9 @@ export default {
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+    ],
+    components: [
+      '~/components/',
     ]
   },
 
@@ -31,6 +34,7 @@ export default {
   buildModules: [
     // https://go.nuxtjs.dev/tailwindcss
     '@nuxtjs/tailwindcss',
+    '@nuxtjs/color-mode'
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -42,13 +46,20 @@ export default {
     strategies: {
       'laravelSanctum': {
         provider: 'laravel/sanctum',
-        url: 'http://localhost:8000'
+        url: 'http://localhost:8080',
+        endpoints: {
+          login: {
+            url: '/api/login',
+            // method:
+          },
+          user: ''
+        }
       }
     }
   },
 
   axios: {
-    baseURL: 'http://localhost:8000',
+    baseURL: 'http://localhost:8080',
     credentials: true,
 },
 
