@@ -1,7 +1,7 @@
 <template>
     <!-- <Disclosure as="nav" class="bg-gray-800" v-slot="{ open }"> -->
-    <div class="bg-gray-800">
-        <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+    <div class="bg-blue-200">
+        <div class="max-w-full mx-auto px-2 sm:px-6 lg:px-8">
         <div class="relative flex items-center justify-between h-16">
             <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
             <!-- Mobile menu button-->
@@ -12,19 +12,14 @@
             </DisclosureButton> -->
             </div>
             <div class="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
-            <div class="flex-shrink-0 flex items-center my-auto justify-center">
-                <NuxtLogo 
 
-                />
-                <h1 class="text-green-400 text-3xl font-bold text-center w-full space-x-3">Beauty Connect</h1>
+                <div class="hidden sm:block sm:ml-6">
+                    <!-- <div class="flex space-x-4">
+                    <a v-for="item in navigation" :key="item.name" :href="item.href" :class="[item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 'px-3 py-2 rounded-md text-sm font-medium']" :aria-current="item.current ? 'page' : undefined">{{ item.name }}</a>
+                    </div> -->
+                </div>
             </div>
-            <div class="hidden sm:block sm:ml-6">
-                <!-- <div class="flex space-x-4">
-                <a v-for="item in navigation" :key="item.name" :href="item.href" :class="[item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white', 'px-3 py-2 rounded-md text-sm font-medium']" :aria-current="item.current ? 'page' : undefined">{{ item.name }}</a>
-                </div> -->
-            </div>
-            </div>
-            <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+            <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6">
             <!-- <button type="button" class="bg-gray-800 p-1 rounded-full text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
                 <span class="sr-only">View notifications</span>
                 <BellIcon class="h-6 w-6" aria-hidden="true" />
@@ -36,7 +31,7 @@
                 <!-- <MenuButton class="bg-gray-800 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"> -->
                     <!-- <span class="sr-only">Open user menu</span> -->
                     <div class="hidden lg:flex lg:items-center lg:space-x-6">
-                        <a href="#" class="py-2 px-6 bg-blue-500 border border-transparent rounded-md shadow-md text-base font-medium text-white hover:bg-blue-600"> Logout </a>
+                        <button @click.prevent="logout" class="py-2 px-6 bg-blue-500 border border-transparent rounded-md shadow-md text-base font-medium text-white hover:bg-blue-600"> Logout </button>
                     </div>                
                 <!-- </MenuButton> -->
                 </div>
@@ -66,4 +61,16 @@
 //   { name: 'Projects', href: '#', current: false },
 //   { name: 'Calendar', href: '#', current: false },
 // ]
+export default {
+    methods: {
+        async logout() {
+            try {
+                await this.$auth.logout();
+            } catch (error) {
+                console.log(error);
+            }
+            // this.$auth.logout;
+        },
+    }
+}
 </script>

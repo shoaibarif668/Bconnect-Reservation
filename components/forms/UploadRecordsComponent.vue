@@ -26,7 +26,7 @@
             
 
             <div class="mx-auto flex mt-4">
-                <button type="submit" class="rounded w-32 text-white bg-blue-400 p-2">
+                <button type="submit" class="rounded w-32 hover:bg-blue-600 text-white bg-blue-400 p-2">
                     Submit
                 </button>
             </div>
@@ -37,6 +37,7 @@
 <script>
 
 export default {
+    name: 'UploadRecordsComponent',
     props: ['close_current_form'],
     data() {
         return {

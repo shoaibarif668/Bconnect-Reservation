@@ -35,49 +35,24 @@
           </div>
           
         </nav>
-
-        <transition enter-active-class="duration-150 ease-out" enter-from-class="opacity-0 scale-95" enter-to-class="opacity-100 scale-100" leave-active-class="duration-100 ease-in" leave-from-class="opacity-100 scale-100" leave-to-class="opacity-0 scale-95">
-          <div focus class="absolute top-0 inset-x-0 p-2 transition transform origin-top lg:hidden">
-            <div class="rounded-lg shadow-lg bg-white ring-1 ring-black ring-opacity-5 overflow-hidden">
-              <div class="px-5 pt-4 flex items-center justify-between">
-                <div>
-                  <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/workflow-mark.svg?color=blue&shade=500" alt="" />
-                </div>
-                <!-- <div class="-mr-2">
-                  <PopoverButton class="bg-white rounded-md p-2 inline-flex items-center justify-center text-blue-gray-400 hover:bg-blue-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500">
-                    <span class="sr-only">Close menu</span>
-                    <XIcon class="h-6 w-6" aria-hidden="true" />
-                  </PopoverButton>
-                </div> -->
-              </div>
-              <div class="pt-5 pb-6">
-                <!-- <div class="px-2 space-y-1">
-                  <a v-for="item in navigation" :key="item.name" :href="item.href" class="block px-3 py-2 rounded-md text-base font-medium text-blue-gray-900 hover:bg-blue-gray-50">{{ item.name }}</a>
-                </div> -->
-                <!-- <div class="mt-6 px-5">
-                  <a href="#" class="block text-center w-full py-2 px-4 border border-transparent rounded-md shadow bg-blue-500 text-white font-medium hover:bg-blue-600">Login</a>
-                </div> -->
-              </div>
-            </div>
-          </div>
-        </transition>
+        
       </div>
 
       <div class="relative mt-8 max-w-md mx-auto px-4 pb-16 sm:max-w-3xl sm:px-6 md:mt-12 lg:max-w-7xl lg:px-8">
         <!-- <h1 class="text-4xl font-extrabold tracking-tight text-white md:text-5xl lg:text-6xl">Support</h1> -->
 
         <div v-show="showUploadForm" class="flex w-full sm:w-4/5 lg:w-2/3 xl:w-1/2 mx-auto w-auto p-3">
-            <UploadRecordsComponent
+            <FormsUploadRecordsComponent
             @close_current_form="closeCurrentForm"
             >
-            </UploadRecordsComponent>
+            </FormsUploadRecordsComponent>
         </div>
         
         <div v-show="showCampaignForm" class="flex w-full sm:w-4/5 lg:w-2/3 xl:w-1/2 mx-auto w-auto p-3">
-            <CreateCampaignComponent
+            <FormsCreateCampaignComponent
             @close_current_form="closeCurrentForm"
             >
-            </CreateCampaignComponent>
+            </FormsCreateCampaignComponent>
         </div>
 
       </div>
@@ -117,7 +92,8 @@ const navigation = [
 ]
 
 export default {
-    data() {
+  name: 'FormsTemplate',
+  data() {
     return {
       showUploadForm: false,
       showCampaignForm: false,

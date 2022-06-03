@@ -1,11 +1,30 @@
 <template>
-  <div class="">
-    <NavbarComponent />
-    <div class="w-full min-h-3/4 border-2 border-gray-200 bg-gray-100 rounded">
-      <FormsTemplate />
+  <div>
+    <div class="h-screen" v-if="$auth.loggedIn">
+    <!-- <Login /> -->
+      <div class="">
+          <UiNavbarComponent />
+      </div>
+      <div class="w-full flex">
+
+        <UiSideMenu />
+
+        <div class="w-full min-h-3/4 bg-gray-100 rounded">
+          <FormsTemplate />
+        </div>
+
+      </div>
+      
+        <UiFooter />
+
     </div>
-      <Footer/>
+
+    <div v-else>
+      <!-- Programmatically push login if not logged in -->
+      {{ this.$router.push('/login') }}
+    </div>
   </div>
+  
 </template>
 
 <script>

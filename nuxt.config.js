@@ -12,11 +12,14 @@ export default {
       { name: 'format-detection', content: 'telephone=no' }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+      { rel: 'icon', type: 'image/x-icon', href: '/bConnect.png' }
     ],
-    components: [
-      '~/components/',
-    ]
+    components: {
+      dirs: [
+        '~/components',
+        '~/components/forms'
+      ]
+    }
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
@@ -40,6 +43,7 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     '@nuxtjs/axios',
+    '@nuxtjs/auth-next'
   ],
 
   auth: {
@@ -49,7 +53,7 @@ export default {
         url: 'http://localhost:8080',
         endpoints: {
           login: {
-            url: '/api/login',
+            url: '/login',
             // method:
           },
           user: ''

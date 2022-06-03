@@ -1,5 +1,5 @@
 <template>
-    <footer class="bg-gray-700">
+    <footer class="bg-blue-200">
     <div class="max-w-7xl mx-auto py-12 px-4 overflow-hidden sm:px-6 lg:px-8">
       <nav class="-mx-5 -my-2 flex flex-wrap justify-center" aria-label="Footer">
         <!-- <div v-for="item in navigation.main" :key="item.name" class="px-5 py-2">
@@ -14,10 +14,10 @@
           <component :is="item.icon" class="h-6 w-6" aria-hidden="true" />
         </a> -->
       </div>
-      <p class="mt-8 text-center text-base text-gray-400">&copy; 2022 BeautyConnect. All rights reserved.</p>
+      <p class="mt-8 text-center text-base text-gray-500">&copy; 2022 BConnect. All rights reserved.</p>
 
       <div class="mt-12 md:mt-0">
-        <div class="text-sm font-semibold text-gray-300 tracking-wider uppercase" @click="showReportBugModal">Report A Bug</div>
+        <div class="text-sm font-semibold text-gray-500 tracking-wider uppercase" @click="showReportBugModal">Report A Bug</div>
         <ul role="list" class="mt-4 space-y-4">
         </ul>
       </div>

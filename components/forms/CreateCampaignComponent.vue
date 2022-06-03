@@ -6,7 +6,7 @@
         </button>
 
         <h1 class="text-center mb-3">New Text Message Campaign</h1>
-        <form @submit.prevent="createCampaign" class="flex flex-col flex-cols-1 space-y-8 divide-y divide-gray-200">
+        <form @submit.prevent="createCampaign" id="campaignForm" class="flex flex-col flex-cols-1 space-y-8 divide-y divide-gray-200">
             <div class="space-y-8 divide-y divide-gray-200 sm:space-y-5">
                 <div>
                     <div class="">
@@ -16,7 +16,7 @@
                     <div class="mt-2 sm:col-span-2">
                         <div class="flex rounded-md shadow-sm">
                             <!-- <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm"> workcation.com/ </span> -->
-                            <textarea type="text" name="msgHeader" id="msgHeader" class="flex-1 focus:ring-indigo-500 focus:border-indigo-500 block py-2 px-1 w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-md sm:text-sm border-gray-300" />
+                            <textarea type="text" name="msgHeader" id="msgHeader" class="border-gray-100 border font-bold flex-1 focus:ring-indigo-500 focus:border-indigo-500 block py-2 px-1 w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-md sm:text-sm border-gray-300" />
                         </div>
                     </div>
                 </div>
@@ -27,7 +27,7 @@
                     <div class="mt-2 sm:col-span-2">
                         <div class="flex rounded-md shadow-sm">
                             <!-- <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm"> https:// </span> -->
-                            <textarea type="text" name="msgUrl" id="msgUrl" class="flex-1 focus:ring-indigo-500 focus:border-indigo-500 block py-2 px-1 w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-md sm:text-sm border-gray-300" />
+                            <textarea type="text" name="msgUrl" id="msgUrl" class="border-gray-100 border flex-1 focus:ring-indigo-500 focus:border-indigo-500 block py-2 px-1 w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-md sm:text-sm border-gray-300" />
                         </div>
                     </div>
                 </div>
@@ -42,23 +42,46 @@
                     </div>
                 </div>
             </div>
+             <div class="mx-auto flex mt-4">
+                <button type="submit" class="rounded w-32 text-white hover:bg-blue-600 bg-blue-400 p-2">
+                    Submit
+                </button>
+            </div>
         </form>
     </div>
 </template>
 
 <script>
 export default {
+    name: 'CreateCampaignComponent',
     props: ['close_campaign_form'],
     data() {
         return {
             'formData': {
 
-            }
+            },
+            submitting: false,
         }
     },
     methods: {
-        closeForm: function() {
+        closeForm() {
             this.$emit('close_current_form');
+        },
+        async createCampaign() {
+            this.submitting = true;
+            const formData = new FormData(document.getElementById("campaignForm"));
+
+            await this.$axios.$post(`/createCampaign`, formData)
+            .then( res => {
+                this.succesfulUpload();
+            })
+            .catch( err => {
+                console.log(err);
+            });
+        },
+        succesfulUpload() {
+            this.submitting = false;
+            this.fileSupported = true;
         }
     }
 }
