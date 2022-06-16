@@ -10,10 +10,10 @@
         </h1>
         <form @submit.prevent="uploadRecords" enctype="multipart/form-data" method="POST" id="recordsUpload" class="flex flex-col flex-cols-1">
             <div class="space-y-8 divide-y divide-gray-200 sm:space-y-5">
-                <div class="">
+                <!-- <div class="">
                     <label for="businessName" class="pr-5">Business Name</label>
                     <input type="text" class="flex-1 mt-2 focus:ring-indigo-500 border border-gray-700 focus:border-indigo-500 block py-2 px-1 w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-md sm:text-sm border-gray-300" name="businessName" />
-                </div>
+                </div> -->
                 <div class="">
                     <label for="uploadFile" class="pr-5">Choose CSV File to Upload</label>
                     <div class="mt-2 sm:col-span-2">
@@ -42,7 +42,7 @@ export default {
     data() {
         return {
             formData: {
-                businessName: "",
+                // businessName: "",
                 filename: "",
             },
             submitting: false,
@@ -57,6 +57,7 @@ export default {
             await this.$axios.$post(`/uploadRecords`, formData)
             .then( res => {
                 this.succesfulUpload();
+                console.log(res);
             });
         },
         succesfulUpload() {

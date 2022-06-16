@@ -6,9 +6,12 @@
         </button>
 
         <h1 class="text-center mb-3">New Text Message Campaign</h1>
-        <form @submit.prevent="createCampaign" id="campaignForm" class="flex flex-col flex-cols-1 space-y-8 divide-y divide-gray-200">
+        <form @submit.prevent="createCampaign" method="POST" enctype="multipart/form-data" id="campaignForm" class="flex flex-col flex-cols-1 space-y-8 divide-y divide-gray-200">
             <div class="space-y-8 divide-y divide-gray-200 sm:space-y-5">
                 <div>
+
+                    <input class="hidden" name="businessId" v-model="businessId">
+
                     <div class="">
                         <label for="msgHeader" class="text-lg leading-6 font-medium text-gray-900">Message Header</label>
                         <p class="mt-1 max-w-2xl text-sm text-gray-500">What portion of the message do you want to stand out?</p>
@@ -27,7 +30,7 @@
                     <div class="mt-2 sm:col-span-2">
                         <div class="flex rounded-md shadow-sm">
                             <!-- <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm"> https:// </span> -->
-                            <textarea type="text" name="msgUrl" id="msgUrl" class="border-gray-100 border flex-1 focus:ring-indigo-500 focus:border-indigo-500 block py-2 px-1 w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-md sm:text-sm border-gray-300" />
+                            <textarea type="text" name="msgBody" id="msgBody" class="border-gray-100 border flex-1 focus:ring-indigo-500 focus:border-indigo-500 block py-2 px-1 w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-md sm:text-sm border-gray-300" />
                         </div>
                     </div>
                 </div>
@@ -35,10 +38,22 @@
                     <label for="msgUrl" class="text-lg leading-6 font-medium text-gray-900">Message URL</label>
                     <p class="mt-1 max-w-2xl text-sm text-gray-500">Enter a URL your customers can visit to take action (This will generate a tinyURL)</p>
                     <div class="mt-2 sm:col-span-2">
-                        <div class="max-w-lg flex rounded-md shadow-sm">
+                        <div class="flex rounded-md shadow-sm">
                             <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm"> https:// </span>
                             <input type="text" name="msgUrl" id="msgUrl" class="flex-1 focus:ring-indigo-500 border-gray-300 border focus:border-indigo-500 block py-2 px-1 w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-r-md sm:text-sm border-gray-300" placeholder="www.example.com/Home">
                         </div>
+                    </div>
+                </div>
+
+                <div class="">
+                    <div>
+                        <label for="sendToType" class="text-lg leading-6 font-medium text-gray-900">Message Recipients</label>
+                        <select id="sendToType" name="sendToType" autocomplete="country-name" class="flex-1 focus:ring-indigo-500 border-gray-300 border focus:border-indigo-500 block py-2 px-1 w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-md sm:text-sm border-gray-300">
+                            <option key="newCustomers">New Customers</option>
+                            <option key="haveRedeemed">Have Redeemed</option>
+                            <option key="reviewInvite">Review Invite</option>
+                            <option key="multipleRedemptions">Have Redeemed Multiple</option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -57,11 +72,18 @@ export default {
     props: ['close_campaign_form'],
     data() {
         return {
-            'formData': {
+            formData: {
 
             },
+            businessId: null,
             submitting: false,
         }
+    },
+    created() {
+        this.$axios.get('/get-user')
+        .then(res => {
+            this.businessId = res.data.businessId;
+        });
     },
     methods: {
         closeForm() {
@@ -69,8 +91,9 @@ export default {
         },
         async createCampaign() {
             this.submitting = true;
+            console.log(this.businessId);
             const formData = new FormData(document.getElementById("campaignForm"));
-
+            console.log(formData);
             await this.$axios.$post(`/createCampaign`, formData)
             .then( res => {
                 this.succesfulUpload();

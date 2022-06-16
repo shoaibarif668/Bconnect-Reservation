@@ -1,4 +1,4 @@
-<template>
+s<template>
   <div>
     <div class="h-screen" v-if="$auth.loggedIn">
     <!-- <Login /> -->
@@ -29,6 +29,7 @@
 
 <script>
 export default {
+  middleware: 'auth',
   name: 'IndexPage',
   data() {
     return {
@@ -50,5 +51,8 @@ export default {
       this.showCampaignForm = false;
     }
   },
+  mounted() {
+    // console.log(this.$auth.fetchUser());
+  }
 }
 </script>

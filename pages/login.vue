@@ -1,20 +1,7 @@
 <template>
-    <!-- <div class="mx-auto">
-        <form @submit.prevent="login">
-            <div>
-                <label for="email">Email</label>
-                <input type="text" class="" name="email">
-            </div>
-            <div>
-                <label for="password">Password</label>
-                <input type="text" class="" name="password">
-            </div>
-            <button type="submit" class="rounded w-32 hover:bg-blue-600 text-white bg-blue-400 p-2">Login</button>
-        </form>
-    </div> -->
     
-    <div class="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-  <div class="max-w-md w-full space-y-8">
+  <div class="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8">
     <div>
       <NuxtLogo 
         view_box="0 60 225 30"
@@ -79,9 +66,9 @@ export default {
         }
     },
     methods: {
-        login() {
+        async login() {
             console.log(this.email);
-            this.$auth.loginWith('laravelSanctum', {
+            const successfulLogin = await this.$auth.loginWith('laravelSanctum', {
                 data: {
                     email: this.email,
                     password: this.password
@@ -91,7 +78,17 @@ export default {
                 console.log(res);
                 this.errors = null;
             })
-            .catch(err => this.errors = "Email & Password not found");
+            .catch(err => {
+              console.log(err);
+              this.errors = "Email & Password not found";
+            });
+            console.log(this.$auth.loggedIn);
+            // if (successfulLogin) {
+            //   await this.$auth.setUser({
+            //     email: this.email,
+            //     password: this.password
+            //   });
+            // }
         },
         
     }
