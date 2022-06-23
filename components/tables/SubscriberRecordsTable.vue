@@ -1,6 +1,8 @@
 <template>
-    <div class="my-10 mx-4">
+    <div>
+
         <VueTabulator v-model="tableData" :options="options" layout="fitData" />
+    
     </div>
 </template>
 
@@ -17,7 +19,7 @@ export default {
             businessId: null,
             tabulator: null,
             tableData: [
-                { id: 1, firstName: 'kenneth', lastName: 'mckrola', phoneNo: '4352224432' }
+                {}
             ],
             options: {
                 columns: [

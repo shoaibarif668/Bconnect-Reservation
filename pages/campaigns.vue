@@ -4,11 +4,12 @@
             <div class="">
                 <UiNavbarComponent />
             </div>
+
             <div class="w-full flex">
                 <UiSideMenu />
 
-                <div class="w-full bg-gray-100 rounded">
-                    Text Message Campaigns
+                <div class="w-full rounded">
+                    <Campaigns/>
                 </div>
             </div>
 
@@ -20,6 +21,6 @@
 
 <script>
 export default {
-    
+    auth: true,
 }
 </script>

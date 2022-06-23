@@ -13,7 +13,8 @@
 
 <script>
 export default {
-    middleware: 'auth',
+    auth: true,
+    // middleware: 'auth',
     name: 'ReviewsAnalytics',
     data() {
         return {

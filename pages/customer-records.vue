@@ -7,9 +7,8 @@
             <div class="w-full flex">
                 <UiSideMenu />
 
-                <div class="w-full min-h-3/4 bg-gray-100 rounded">
-                    Customer Records
-                    <TablesSubscriberRecordsTable />
+                <div class="w-full bg-gray-100 rounded">
+                    <Subscribers />
                 </div>
             </div>
 
@@ -21,6 +20,7 @@
 
 <script>
 export default {
+    auth: true,
     methods: {
         fetchRecords: function() {
             this.$axios.get();

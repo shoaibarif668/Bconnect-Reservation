@@ -29,7 +29,7 @@ s<template>
 
 <script>
 export default {
-  middleware: 'auth',
+  auth: true,
   name: 'IndexPage',
   data() {
     return {

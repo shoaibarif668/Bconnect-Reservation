@@ -57,6 +57,7 @@
 
 <script>
 export default {
+    auth: false,
     name: 'login',
     data() {
         return {
@@ -77,12 +78,14 @@ export default {
             .then((res) => {
                 console.log(res);
                 this.errors = null;
+                this.$auth.setUser()
+                this.$router.push('/');
             })
             .catch(err => {
               console.log(err);
               this.errors = "Email & Password not found";
             });
-            console.log(this.$auth.loggedIn);
+            // console.log(await this.$auth.fetchUser());
             // if (successfulLogin) {
             //   await this.$auth.setUser({
             //     email: this.email,

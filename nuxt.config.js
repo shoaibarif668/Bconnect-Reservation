@@ -63,6 +63,9 @@ export default {
             // method:
           },
           user: ''
+        },
+        options: {
+          expires: 1
         }
       }
     }
