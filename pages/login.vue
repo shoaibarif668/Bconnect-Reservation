@@ -69,7 +69,7 @@ export default {
     methods: {
         async login() {
             console.log(this.email);
-            const successfulLogin = await this.$auth.loginWith('laravelSanctum', {
+            await this.$auth.loginWith('laravelSanctum', {
                 data: {
                     email: this.email,
                     password: this.password
@@ -78,7 +78,7 @@ export default {
             .then((res) => {
                 console.log(res);
                 this.errors = null;
-                this.$auth.setUser()
+                // this.$auth.setUser()
                 this.$router.push('/');
             })
             .catch(err => {
