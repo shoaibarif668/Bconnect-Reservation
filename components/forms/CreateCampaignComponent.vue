@@ -45,6 +45,17 @@
                     </div>
                 </div>
 
+                <div>
+                    <label for="promoCode" class="text-lg leading-6 font-medium text-gray-900">Promotion Code</label>
+                    <p class="mt-1 max-w-2xl text-sm text-gray-500">A redemption code associated with a deal in your Point of Sale platform that your clients can use at checkout</p>
+                    <div class="mt-2 sm:col-span-2">
+                        <div class="flex rounded-md shadow-sm">
+                            <!-- <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm"></span> -->
+                            <input type="text" name="promoCode" id="promoCode" class="flex-1 focus:ring-indigo-500 border-gray-300 border focus:border-indigo-500 block py-2 px-1 w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-md sm:text-sm border-gray-300" placeholder="FALL2022">
+                        </div>
+                    </div>
+                </div>
+
                 <div class="">
                     <div>
                         <label for="sendToType" class="text-lg leading-6 font-medium text-gray-900">Message Recipients</label>
