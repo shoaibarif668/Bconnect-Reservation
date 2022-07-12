@@ -1,0 +1,15 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-bconnectclient-dev-182036-authRole",
+      "UnauthRoleArn": "arn:aws:iam::796352936742:role/amplify-bconnectclient-dev-182036-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::796352936742:role/amplify-bconnectclient-dev-182036-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-bconnectclient-dev-182036-deployment",
+      "UnauthRoleName": "amplify-bconnectclient-dev-182036-unauthRole",
+      "StackName": "amplify-bconnectclient-dev-182036",
+      "StackId": "arn:aws:cloudformation:us-east-1:796352936742:stack/amplify-bconnectclient-dev-182036/74befb90-0178-11ed-856f-0a4a8be6cd79",
+      "AmplifyAppId": "d3bk59t6pf4jz0"
+    }
+  }
+}

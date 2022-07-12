@@ -8,9 +8,11 @@
                 <h1 class="text-center text-2xl mb-2">
                     Let us know how your visit went!
                 </h1>
-                <p class="text-center text-sm text-gray-700 mb-6">
-                    This will also leave a review on Google
-                </p>
+                Rating: {{rating}}
+                <div v-if="rating == 5" class="text-center text-sm text-gray-700 mb-6">
+                    <UiToggle />
+                    Leave a review on Google
+                </div>
 
                 <div class="w-2/3 mx-auto">
                     <form @submit.prevent="createReview"
@@ -27,6 +29,9 @@
                             <button class="rounded w-32 float-right text-white hover:bg-blue-600 bg-blue-400 p-2" type="button" @click="createReview">Submit Review</button>
                             <button class="rounded w-24 text-sm text-white hover:bg-red-500 bg-red-400 p-2" type="button" @click="cancelReview">Skip</button>
                             
+                        </div>
+                        <div v-if="rating < 5">
+                            Leave review on Google 
                         </div>
                     </form>
                 </div>
@@ -55,7 +60,7 @@ export default {
             this.submitting = true;
             this.$axios.post('/reviews/store')
             .then(res => {
-
+                this.reviewing = false;
             });
         },
         cancelReview: function() {

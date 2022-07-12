@@ -1,0 +1,4 @@
+AWS_BUCKET_NAME="bconnect-cloudfront-deployment"
+AWS_CLOUDFRONT="E1UEL12IUAY78H"
+AWS_ACCESS_KEY_ID="key"
+AWS_SECRET_ACCESS_KEY="secret"

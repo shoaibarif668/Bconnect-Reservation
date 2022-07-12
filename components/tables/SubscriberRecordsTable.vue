@@ -1,14 +1,13 @@
 <template>
     <div>
 
-        <VueTabulator v-model="tableData" :options="options" layout="fitData" />
+        <!-- <VueTabulator v-model="tableData" :options="options" layout="fitData" /> -->
     
     </div>
 </template>
 
 <script>
-// import { VueTabulator } from '../../plugins/vue-tabulator';
-// import { VueTabulator } from '~/plugins/vue-tabulator';
+
 export default {
     // components : { VueTabulator },
     props: [

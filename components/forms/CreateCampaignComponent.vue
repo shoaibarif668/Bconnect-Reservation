@@ -83,11 +83,15 @@ export default {
     props: ['close_campaign_form'],
     data() {
         return {
+            // We must be able to select multiple sendToTypes (using checkbox)
+            // We will submit an array where selected keys have value 1, non-selected
+            // have value 0
             formData: {
 
             },
             businessId: null,
             submitting: false,
+
         }
     },
     created() {
@@ -105,13 +109,13 @@ export default {
             console.log(this.businessId);
             const formData = new FormData(document.getElementById("campaignForm"));
             console.log(formData);
-            await this.$axios.$post(`/createCampaign`, formData)
-            .then( res => {
-                this.succesfulUpload();
-            })
-            .catch( err => {
-                console.log(err);
-            });
+            // await this.$axios.$post(`/createCampaign`, formData)
+            // .then( res => {
+            //     this.succesfulUpload();
+            // })
+            // .catch( err => {
+            //     console.log(err);
+            // });
         },
         succesfulUpload() {
             this.submitting = false;
