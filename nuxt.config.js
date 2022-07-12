@@ -1,7 +1,7 @@
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   target: 'static',
-  
+
   head: {
     title: 'bcfront',
     htmlAttrs: {
@@ -58,7 +58,7 @@ export default {
     strategies: {
       laravelSanctum: {
         provider: 'laravel/sanctum',
-        url: 'http://localhost:8080',
+        url: process.env.API_URL,
         endpoints: {
           login: {
             url: '/login',
@@ -73,7 +73,7 @@ export default {
     }
   },
   axios: {
-    baseURL: 'http://localhost:8080',
+    baseURL: process.env.API_URL,
     credentials: true,
 },
 
