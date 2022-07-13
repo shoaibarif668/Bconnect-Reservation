@@ -2,6 +2,10 @@ export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   target: 'static',
 
+  // publicRuntimeConfig: {
+  //   baseURL: process.env.API_URL || 'http://localhost:8080',
+  // },
+
   head: {
     title: 'bcfront',
     htmlAttrs: {
@@ -58,7 +62,7 @@ export default {
     strategies: {
       laravelSanctum: {
         provider: 'laravel/sanctum',
-        url: process.env.API_URL || 'http://localhost:8080',
+        url: process.env.API_URL,
         endpoints: {
           login: {
             url: '/login',
@@ -79,5 +83,6 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+
   }
 }
