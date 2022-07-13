@@ -58,7 +58,7 @@ export default {
     strategies: {
       laravelSanctum: {
         provider: 'laravel/sanctum',
-        url: process.env.API_URL,
+        url: process.env.API_URL || 'http://localhost:8080',
         endpoints: {
           login: {
             url: '/login',
