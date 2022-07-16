@@ -10,7 +10,8 @@
                         <h2 class="text-3xl font-extrabold tracking-tight sm:text-4xl">Customer Records</h2>
                     </div>
 
-                    <TablesSubscriberRecordsTable />
+                    <!-- <TablesSubscriberRecordsTable /> -->
+                    View and Edit Send To Types
                 </div>
             </div>
 

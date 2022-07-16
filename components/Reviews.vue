@@ -39,7 +39,7 @@ export default {
     },
     methods: {
         fetchReviewData: function() {
-
+            // this.$axios.get(/review-data, businessId).then().catch();
         }
     }
 }
