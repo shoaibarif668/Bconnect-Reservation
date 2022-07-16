@@ -109,13 +109,13 @@ export default {
             console.log(this.businessId);
             const formData = new FormData(document.getElementById("campaignForm"));
             console.log(formData);
-            // await this.$axios.$post(`/createCampaign`, formData)
-            // .then( res => {
-            //     this.succesfulUpload();
-            // })
-            // .catch( err => {
-            //     console.log(err);
-            // });
+            await this.$axios.$post(`/createCampaign`, formData)
+            .then( res => {
+                this.succesfulUpload();
+            })
+            .catch( err => {
+                console.log(err);
+            });
         },
         succesfulUpload() {
             this.submitting = false;
