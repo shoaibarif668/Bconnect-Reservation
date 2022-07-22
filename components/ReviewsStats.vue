@@ -16,7 +16,7 @@
                 </div>
                 <div class="flex flex-col mt-10 sm:mt-0">
                     <dt class="order-2 mt-2 text-lg leading-6 font-medium text-indigo-200 capitalize">Reviews left this week</dt>
-                    <dd class="order-1 text-5xl font-extrabold text-white">{{reviewsWeek }}</dd>
+                    <dd class="order-1 text-5xl font-extrabold text-white">{{reviewsPastWeek }}</dd>
                 </div>
             </dl>
         </div>
@@ -26,21 +26,34 @@
 <script>
 export default {
     props: [
-        'businessId',
+        'business_id',
         // 'userId'
     ],
     data() {
         return {
+            businessId: this.business_id,
             pctReviewed: 0,
             avgRating: 0,
             avgRatingOutOf: 5,
-            reviewsWeek: 0,
+            reviewsPastWeek: 0,
         }
     },
     methods: {
         fetchReviewData: function() {
-            // this.$axios.get(/review-data, businessId).then().catch();
+            this.$axios.post(`/reviews/review-data`, {
+                businessId: this.businessId
+            })
+            .then( res => {
+                console.log(res);
+                this.pctReviewed = res.data.pctReviewed;
+                this.avgRating = res.data.avgRating;
+                // this.reviewsPastWeek = res.data.reviewsPastWeek;
+            })
+            .catch();
         }
+    },
+    created() {
+        this.fetchReviewData();
     }
 }
 </script>

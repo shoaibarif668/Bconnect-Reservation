@@ -167,6 +167,7 @@ export default {
         sendCampaign() {
             // console.log(this.msgToSend);
             this.sending = true;
+            console.log(this.msgToSend);
             this.$axios.post(`/send-campaign`, {
                 body: this.msgToSend.body,
                 header: this.msgToSend.header,
