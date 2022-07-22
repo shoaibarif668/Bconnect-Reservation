@@ -11,14 +11,29 @@
 
                     <div class="bg-white">
 
-                        <div class="mx-auto py-12 text-center lg:py-24">
+                        <div class="mx-auto py-12 text-center">
                             <div class="space-y-8 sm:space-y-12">
 
                                 <div class="space-y-5 sm:mx-auto sm:max-w-xl sm:space-y-4 lg:max-w-5xl">
                                     <h2 class="text-3xl font-extrabold tracking-tight sm:text-4xl">Reviews Analytics</h2>
                                 </div>
 
-                                <Reviews />
+
+                                <ReviewsStats :business_id="businessId" />
+
+                                <div class="space-y-5">
+                                    <a class="text-xl text-blue-600 hover:underline" :href="businessGoogleReviewUrl">
+                                        See reviews on Google
+                                    </a>
+                                </div>
+
+                                <ReviewsList v-if="reviews && !fetchingReviews" :reviews="reviews" />
+                                <UiLoadingSpinner v-else-if="fetchingReviews" 
+                                    borderWidth="2px"
+                                    borderTopColor="#022b56"
+                                    borderBg="transparent"
+                                    size="20px"
+                                />
 
                             </div>
 
@@ -46,13 +61,41 @@ export default {
         return {
             businessId: null,
             userId: null,
+            businessGoogleReviewUrl: "#",
+
+            reviews: null,
+            fetchingReviews: false
         }
     },
     methods: {
-        getUserData: function() {
-            this.$axios.get('')
-            .then()
+        retrieveUserData() {
+            this.$axios.get('/get-user')
+            .then( res => {
+                this.businessId = res.data.businessId;
+                // this.getBusinessGoogleReviewUrl
+                this.fetchAllReviews();
+            })
+        },
+        getBusinessGoogleReviewUrl() {
+            //
+        },
+        async fetchAllReviews() {
+            await this.$axios.get(`/reviews/fetch-all/${this.businessId}`)
+            .then( res => {
+                console.log(res);
+                this.reviews = res.data.reviews;
+                this.fetchingReviews = false;
+            })
+            .catch( err => {
+                this.fetchingReviews = false;
+                console.log("An error occured during fetch");
+                console.log(err);
+            });
         }
+    },
+    created() {
+        this.fetchingReviews = true;
+        this.retrieveUserData();
     }
 }
 </script>
