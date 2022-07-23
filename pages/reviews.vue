@@ -19,7 +19,7 @@
                                 </div>
 
 
-                                <ReviewsStats :business_id="businessId" />
+                                <ReviewsStats :stats="stats" :business_id="businessId" />
 
                                 <div class="space-y-5">
                                     <a class="text-xl text-blue-600 hover:underline" :href="businessGoogleReviewUrl">
@@ -63,18 +63,37 @@ export default {
             userId: null,
             businessGoogleReviewUrl: "#",
 
+            stats: {
+                pctReviewed: 0
+
+            },
             reviews: null,
             fetchingReviews: false
         }
     },
     methods: {
-        retrieveUserData() {
-            this.$axios.get('/get-user')
+        async retrieveUserData() {
+            await this.$axios.get('/get-user')
             .then( res => {
+                console.log(this.businessId);
                 this.businessId = res.data.businessId;
                 // this.getBusinessGoogleReviewUrl
                 this.fetchAllReviews();
+                this.fetchReviewData();
             })
+        },
+        async fetchReviewData() {
+            console.log(this.businessId);
+            await this.$axios.post(`/reviews/review-data`, {
+                businessId: this.businessId
+            })
+            .then( res => {
+                console.log(res);
+                this.stats.pctReviewed = res.data.pctReviewed;
+                this.stats.avgRating = res.data.avgRating;
+                this.stats.reviewsPastWeek = res.data.reviewsPastWeek;
+            })
+            .catch();
         },
         getBusinessGoogleReviewUrl() {
             //
