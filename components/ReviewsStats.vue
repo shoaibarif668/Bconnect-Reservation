@@ -8,15 +8,15 @@
             <dl class="mt-10 text-center sm:max-w-3xl sm:mx-auto sm:grid sm:grid-cols-3 sm:gap-8">
                 <div class="flex flex-col">
                     <dt class="order-2 mt-2 text-lg leading-6 font-medium text-indigo-200 capitalize">Customers who have left reviews</dt>
-                    <dd class="order-1 text-5xl font-extrabold text-white">{{pctReviewed}}%</dd>
+                    <dd class="order-1 text-5xl font-extrabold text-white">{{stats.pctReviewed}}%</dd>
                 </div>
                 <div class="flex flex-col mt-10 sm:mt-0">
                     <dt class="order-2 mt-2 text-lg leading-6 font-medium text-indigo-200 capitalize">Average rating left by your customers</dt>
-                    <dd class="order-1 text-5xl font-extrabold text-white">{{avgRating}}/{{avgRatingOutOf}}</dd>
+                    <dd class="order-1 text-5xl font-extrabold text-white">{{stats.avgRating}}/{{avgRatingOutOf}}</dd>
                 </div>
                 <div class="flex flex-col mt-10 sm:mt-0">
                     <dt class="order-2 mt-2 text-lg leading-6 font-medium text-indigo-200 capitalize">Reviews left this week</dt>
-                    <dd class="order-1 text-5xl font-extrabold text-white">{{reviewsPastWeek }}</dd>
+                    <dd class="order-1 text-5xl font-extrabold text-white">{{ stats.reviewsPastWeek }}</dd>
                 </div>
             </dl>
         </div>
@@ -27,33 +27,23 @@
 export default {
     props: [
         'business_id',
+        'stats',
         // 'userId'
     ],
     data() {
         return {
             businessId: this.business_id,
-            pctReviewed: 0,
-            avgRating: 0,
+            // pctReviewed: this.stats.pctReviewed,
+            // avgRating: this.stats.avgRating,
             avgRatingOutOf: 5,
-            reviewsPastWeek: 0,
+            // reviewsPastWeek: this.stats.reviewsPastWeek,
         }
     },
     methods: {
-        fetchReviewData: function() {
-            this.$axios.post(`/reviews/review-data`, {
-                businessId: this.businessId
-            })
-            .then( res => {
-                console.log(res);
-                this.pctReviewed = res.data.pctReviewed;
-                this.avgRating = res.data.avgRating;
-                // this.reviewsPastWeek = res.data.reviewsPastWeek;
-            })
-            .catch();
-        }
+        
     },
     created() {
-        this.fetchReviewData();
+        
     }
 }
 </script>
