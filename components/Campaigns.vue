@@ -192,14 +192,18 @@ export default {
             });
         },
         updateCampaign(campaign) {
+            // console.log(campaign);
             this.updating = true;
-            let updatedCampaign = this.campaigns.find(cmp => cmp.id === campaign.id);
             // updatedCampaign = campaign; // Doesn't update
             // Need to 
             this.$axios.post('/update-campaign', campaign)
             .then( res => {
                 this.updating = false;
-                console.log(res);
+                let newCampaign = res.data.updated_campaign;
+                let campaignIndex = this.campaigns.findIndex(cmp => cmp.id === newCampaign.id);
+
+                this.$set(this.campaigns, campaignIndex, res.data.updated_campaign);
+                // console.log(res);
                 this.closeModals();
             })
             .catch( err => {
