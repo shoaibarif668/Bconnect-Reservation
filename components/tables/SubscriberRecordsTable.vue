@@ -48,16 +48,16 @@ export default {
         }
     },
     methods: {
-        retrieveUserData: function() {
-            this.$axios.get(`/get-user`)
+        async retrieveUserData () {
+            await this.$axios.get(`/get-user`)
             .then(res => {
                 console.log(res.data);
                 this.businessId = res.data.businessId;
                 this.retrieveSubscriberData();
             });
         },
-        retrieveSubscriberData: function() {
-            this.$axios.$post('/fetch-subscribers', {
+        async retrieveSubscriberData() {
+            await this.$axios.$post('/fetch-subscribers', {
                 businessId: this.businessId
             })
             .then(res => {

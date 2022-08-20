@@ -11,7 +11,23 @@
                     </div>
 
                     <!-- <TablesSubscriberRecordsTable /> -->
+                    <div class="mx-auto">
+                        <div class="flex space-x-5">
+                            <h3>Name</h3>
+                            <h3>Subscribed</h3>
+                        </div>
+                        <div v-for="subscriber in subscribers" :key="subscriber.id" class="flex mx-auto space-x-5">
+                            <div>
+                                {{subscriber.firstName}}
+                                {{subscriber.lastName}}
+                            </div>
+                            <div class="flex ">
+                                {{subscriber.subscribed}}
+                            </div>
+                        </div>
+                    </div>
                     View and Edit Send To Types
+
                 </div>
             </div>
 
@@ -24,8 +40,34 @@
 export default {
     data() {
         return {
-            
+            // user: null,
+            businessId: null,
+            subscribers: [],
         }
+    },
+    methods: {
+        retrieveUserData() {
+            this.$axios.get('/get-user')
+            .then(res => {
+                this.businessId = res.data.businessId;
+                this.retrieveSubscriberData();
+            })
+            .catch(err => {
+                console.log(err);
+            })
+        },
+        retrieveSubscriberData: function() {
+            this.$axios.$post('/fetch-subscribers', {
+                businessId: this.businessId
+            })
+            .then(res => {
+                console.log(res.subscriberData);
+                this.subscribers = res.subscriberData;
+            });
+        }
+    },
+    created() {
+        this.retrieveUserData();
     }
 }
 </script>
