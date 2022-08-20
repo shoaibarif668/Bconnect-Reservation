@@ -8,6 +8,11 @@
 
                     <div class="space-y-5 sm:mx-auto sm:max-w-xl sm:space-y-4 lg:max-w-5xl">
                         <h2 class="text-3xl font-extrabold tracking-tight sm:text-4xl">Message Campaigns</h2>
+                        <div>
+                            <button @click="showNewCampaign" class="p-2 border border-indigo-500 rounded-lg text-indigo-600 hover:bg-indigo-600 hover:text-white" type="button">
+                                + New Campaign
+                            </button>
+                        </div>
                     </div>
 
                     <div v-if="sending" class="mx-auto">
@@ -173,10 +178,12 @@ export default {
                 header: this.msgToSend.header,
                 url: this.msgToSend.url,
                 sendToType: this.msgToSend.sendToType,
+                businessId: this.businessId,
                 // redemptionCode: this.msgToSend.redemptionCode,
                 id: this.msgToSend.id
             })
             .then(res => {
+                const _this = this;
                 this.sending = false;
                 console.log(res);
                 this.notifySent = res.data.message;
@@ -191,15 +198,22 @@ export default {
                 console.log(err.error);
             });
         },
+        showNewCampaign() {
+            console.log("show new campaign form");
+        },
         updateCampaign(campaign) {
+            // console.log(campaign);
             this.updating = true;
-            let updatedCampaign = this.campaigns.find(cmp => cmp.id === campaign.id);
             // updatedCampaign = campaign; // Doesn't update
             // Need to 
             this.$axios.post('/update-campaign', campaign)
             .then( res => {
                 this.updating = false;
-                console.log(res);
+                let newCampaign = res.data.updated_campaign;
+                let campaignIndex = this.campaigns.findIndex(cmp => cmp.id === newCampaign.id);
+
+                this.$set(this.campaigns, campaignIndex, res.data.updated_campaign);
+                // console.log(res);
                 this.closeModals();
             })
             .catch( err => {
