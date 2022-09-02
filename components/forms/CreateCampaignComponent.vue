@@ -2,7 +2,7 @@
     <div class="flex flex-col rounded-lg shadow-lg overflow-hidden p-4">
 
         <button @click="closeForm" class="flex right-2">
-            <svg class="h-12 w-12" xmlns="http://www.w3.org/2000/svg"><g fill="#999" fill-rule="evenodd"><rect transform="rotate(45 18.5 18.5)" x="-4" y="15" width="45" height="7" rx="2"/><rect transform="rotate(-45 18.5 18.5)" x="-4" y="15" width="45" height="7" rx="2"/></g></svg>
+            <svg class="h-10 w-10" xmlns="http://www.w3.org/2000/svg"><g fill="#999" fill-rule="evenodd"><rect transform="rotate(45 18.5 18.5)" x="-4" y="15" width="45" height="7" rx="2"/><rect transform="rotate(-45 18.5 18.5)" x="-4" y="15" width="45" height="7" rx="2"/></g></svg>
         </button>
 
         <h1 class="text-center mb-3">New Text Message Campaign</h1>
@@ -19,7 +19,7 @@
                     <div class="mt-2 sm:col-span-2">
                         <div class="flex rounded-md shadow-sm">
                             <!-- <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm"> workcation.com/ </span> -->
-                            <textarea type="text" name="msgHeader" id="msgHeader" class="border-gray-100 border font-bold flex-1 focus:ring-indigo-500 focus:border-indigo-500 block py-2 px-1 w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-md sm:text-sm border-gray-300" />
+                            <input type="text" name="msgHeader" id="msgHeader" class="border-gray-100 border font-bold flex-1 focus:ring-indigo-500 focus:border-indigo-500 block py-2 px-1 w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-md sm:text-sm border-gray-300" />
                         </div>
                     </div>
                 </div>
@@ -39,8 +39,7 @@
                     <p class="mt-1 max-w-2xl text-sm text-gray-500">Enter a URL your customers can visit to take action (This will generate a tinyURL)</p>
                     <div class="mt-2 sm:col-span-2">
                         <div class="flex rounded-md shadow-sm">
-                            <span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm"> https:// </span>
-                            <input type="text" name="msgUrl" id="msgUrl" class="flex-1 focus:ring-indigo-500 border-gray-300 border focus:border-indigo-500 block py-2 px-1 w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-r-md sm:text-sm border-gray-300" placeholder="www.example.com/Home">
+                            <input type="text" name="msgUrl" id="msgUrl" class="flex-1 focus:ring-indigo-500 border-gray-300 border focus:border-indigo-500 block py-2 px-1 w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-md sm:text-sm border-gray-300" placeholder="www.example.com/Home">
                         </div>
                     </div>
                 </div>
@@ -60,10 +59,11 @@
                     <div>
                         <label for="sendToType" class="text-lg leading-6 font-medium text-gray-900">Message Recipients</label>
                         <select id="sendToType" name="sendToType" autocomplete="country-name" class="flex-1 focus:ring-indigo-500 border-gray-300 border focus:border-indigo-500 block py-2 px-1 w-full focus:ring-indigo-500 focus:border-indigo-500 min-w-0 rounded-md sm:text-sm border-gray-300">
-                            <option key="newCustomers">New Customers</option>
+                            <option v-for="sendType in sendToTypes" :key="sendType.type">{{ sendType.type }}</option>
+                            <!-- <option key="newCustomers">New Customers</option>
                             <option key="haveRedeemed">Have Redeemed</option>
                             <option key="reviewInvite">Review Invite</option>
-                            <option key="multipleRedemptions">Have Redeemed Multiple</option>
+                            <option key="multipleRedemptions">Have Redeemed Multiple</option> -->
                         </select>
                     </div>
                 </div>
@@ -80,7 +80,7 @@
 <script>
 export default {
     name: 'CreateCampaignComponent',
-    props: ['close_campaign_form'],
+    props: ['close_campaign_form', 'campaign_created'],
     data() {
         return {
             // We must be able to select multiple sendToTypes (using checkbox)
@@ -91,14 +91,12 @@ export default {
             },
             businessId: null,
             submitting: false,
+            sendToTypes: [],
 
         }
     },
     created() {
-        this.$axios.get('/get-user')
-        .then(res => {
-            this.businessId = res.data.businessId;
-        });
+        this.retrieveUser();
     },
     methods: {
         closeForm() {
@@ -117,9 +115,27 @@ export default {
                 console.log(err);
             });
         },
+        async fetchTypes() {
+            await this.$axios.get(`/fetch-sendToTypes/${this.businessId}`)
+            .then( res => {
+                console.log(res.data.types);
+                this.sendToTypes = res.data.types;
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        },
+        async retrieveUser() {
+            await this.$axios.get('/get-user')
+            .then(res => {
+                this.businessId = res.data.businessId;
+            });
+            this.fetchTypes();
+        },
         succesfulUpload() {
             this.submitting = false;
             this.fileSupported = true;
+            if (this.campaign_created) this.$emit('campaign_created');
         }
     }
 }
