@@ -5,13 +5,17 @@
 
             <div class="max-w-7xl mx-auto py-12 px-4 text-center sm:px-6 lg:px-8 lg:py-24">
                 <div class="space-y-8 sm:space-y-12">
-
                     <div class="space-y-5 sm:mx-auto sm:max-w-xl sm:space-y-4 lg:max-w-5xl">
                         <h2 class="text-3xl font-extrabold tracking-tight sm:text-4xl">Message Campaigns</h2>
                         <div>
-                            <button @click="showNewCampaign" class="p-2 border border-indigo-500 rounded-lg text-indigo-600 hover:bg-indigo-600 hover:text-white" type="button">
+                            <button @click="showNewCampaign = true" class="p-2 border border-indigo-500 rounded-lg text-indigo-600 hover:bg-indigo-600 hover:text-white" type="button">
                                 + New Campaign
                             </button>
+                        </div>
+                        <div v-if="showNewCampaign" class="flex w-full sm:w-4/5 lg:w-2/3 xl:w-1/2 mx-auto w-auto p-3">
+                            <FormsCreateCampaignComponent
+                                @close_current_form="closeNewCampaignForm"
+                            />
                         </div>
                     </div>
 
@@ -32,6 +36,9 @@
                     </div>
                     <div v-if="notifyDeleted" class="p-2 mt-2 inline-flex text-center text-green-900 bg-green-200 rounded-lg shadow-md mx-auto">
                         {{ notifyDeleted }}
+                    </div>
+                    <div v-if="notifyCreated" class="p-2 mt-2 inline-flex text-center text-green-900 bg-green-200 rounded-lg shadow-md mx-auto">
+                        {{ notifyCreated }}
                     </div>
 
                     <!-- <TablesMessageCampaignsTable /> -->
@@ -71,7 +78,7 @@
                                         <!-- Will have multiple values -->
                                         <a class="font-semibold">{{cmp.sendToType}}</a>
                                     </li>
-                                    <li class="flex space-x-3">
+                                    <li v-if="cmp.url" class="flex space-x-3">
                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
                                         </svg>
@@ -114,6 +121,7 @@ export default {
             showDeleteModal: false,
             showSendModal: false,
             activeModalId: null,
+            showNewCampaign: false,
 
             msgToSend: null,
             msgToEdit: null,
@@ -122,12 +130,22 @@ export default {
             sending: false,
             updating: false,
             deleting: false,
+            notifyCreated: "",
             notifySent: "",
             notifyDeleted: "",
             notifyEdited: ""
         }
     },
     methods: {
+        campaignCreated() {
+            this.notifyCreated = "Successfully added new campaign";
+            setTimeout(function() {
+                _this.notifyCreated = "";
+            }, 4000);
+        },
+        closeNewCampaignForm() {
+            this.showNewCampaign = false;
+        },
         retrieveUserData() {
             this.$axios.get(`/get-user`)
             .then(res => {
@@ -188,7 +206,7 @@ export default {
                 console.log(res);
                 this.notifySent = res.data.message;
                 setTimeout(function() {
-                    _this.notifySent = null;
+                    _this.notifySent = "";
                 }, 4000);
                 this.closeModals();
             })
@@ -197,9 +215,6 @@ export default {
                 this.closeModals();
                 console.log(err.error);
             });
-        },
-        showNewCampaign() {
-            console.log("show new campaign form");
         },
         updateCampaign(campaign) {
             // console.log(campaign);

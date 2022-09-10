@@ -77,9 +77,15 @@ export default {
     }
   },
   axios: {
+    // proxy: true,
     baseURL: process.env.API_URL,
     credentials: true,
-},
+  },
+
+  // proxy: {
+  //   '/': { target: process.env.API_URL, pathRewrite: { '^/': '' }, changeOrigin: true},
+  //   Implement 2nd API URL here
+  // },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {

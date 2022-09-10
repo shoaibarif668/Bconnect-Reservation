@@ -19,6 +19,7 @@
 
           <dl class="space-y-3">
             <div v-for="count in reviews.counts" :key="count" class="flex items-center text-sm">
+              {{typeof(count)}}
               <dt class="flex-1 flex items-center" v-if="count !== reviews.counts.totalCount">
                 <p class="w-3 font-medium text-gray-900">{{ count }}<span class="sr-only"> star reviews</span></p>
                 <div aria-hidden="true" class="ml-1 flex-1 flex items-center">
@@ -74,6 +75,11 @@ export default {
             // reviews: this.reviews_prop,
             // reviews: this.reviews,
         }
+    },
+    computed: {
+      reviewCounts: function() {
+        return this.reviews.counts.entries()
+      }
     },
     methods: {
       
