@@ -101,7 +101,7 @@ export default {
         async fetchAllReviews() {
             await this.$axios.get(`/reviews/fetch-all/${this.businessId}`)
             .then( res => {
-                console.log(res);
+                // console.log(res);
                 this.reviews = res.data.reviews;
                 this.fetchingReviews = false;
             })
