@@ -30,6 +30,8 @@
                   </div>
                 </div>
               </dt>
+              Count: {{count }}
+              Total Count: {{ reviews.counts.totalCount }}
               <dd v-if="count !== reviews.counts.totalCount" class="ml-3 w-10 text-right tabular-nums text-sm text-gray-900">{{ Math.round((count / reviews.counts.totalCount) * 100) }}%</dd>
             </div>
           </dl>
