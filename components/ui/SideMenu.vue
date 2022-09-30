@@ -97,7 +97,7 @@
         <nav class="flex-1 px-2 pb-4 space-y-2">
           <!-- Current: "bg-indigo-800 text-white", Default: "text-indigo-100 hover:bg-indigo-600" -->
           <button @click.prevent="logout" class="py-2 mb-6 flex lg:hidden px-6 mx-auto bg-blue-500 border border-transparent rounded-md shadow-md text-base font-medium text-white hover:bg-blue-600"> Logout </button>
-          <NuxtLink to="#" class="text-gray-100 bg-gray-200 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+          <NuxtLink to="/reviews" class="text-gray-100 bg-gray-700 hover:bg-gray-600 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
             <!-- Heroicon name: outline/folder -->
             <svg class="mr-3 flex-shrink-0 h-6 w-6 text-gray-100" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
