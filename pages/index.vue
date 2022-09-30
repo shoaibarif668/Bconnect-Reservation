@@ -1,4 +1,4 @@
-s<template>
+<template>
   <div>
     <div class="h-screen" v-if="$auth.loggedIn">
     <!-- <Login /> -->

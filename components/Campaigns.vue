@@ -191,14 +191,8 @@ export default {
             // console.log(this.msgToSend);
             this.sending = true;
             console.log(this.msgToSend);
-            this.$axios.post(`/send-campaign`, {
-                body: this.msgToSend.body,
-                header: this.msgToSend.header,
-                url: this.msgToSend.url,
-                sendToType: this.msgToSend.sendToType,
-                businessId: this.businessId,
-                // redemptionCode: this.msgToSend.redemptionCode,
-                id: this.msgToSend.id
+            this.$axios.put(`/send-campaign`, {
+                campaignId: this.msgToSend.id
             })
             .then(res => {
                 const _this = this;
