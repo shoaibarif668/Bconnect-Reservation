@@ -51,7 +51,7 @@
               <base-button :click-handler="()=>handleSignup(true)">Sign up</base-button>
             </div>
           </div>
-          <img src="~/assets/img/auth-image.png" class="max-w-[50%]" alt="Auth"/>
+          <img src="@/assets/img/auth-image.png" class="max-w-[50%]" alt="Auth"/>
         </div>
         <div class="pb-12 pt-20  flex gap-16" v-if="isUserLoggedIn">
           <div class="flex flex-col">
@@ -61,14 +61,14 @@
             <base-button custom-classes="mb-5" :click-handler="()=>{}">View Booking History</base-button>
             <base-button :click-handler="()=>{}">Book New Appointment</base-button>
           </div>
-          <img src="~/assets/img/booking-completed.png" class="max-w-[50%] object-contain" alt="Auth"/>
+          <img src="@/assets/img/booking-completed.png" class="max-w-[50%] object-contain" alt="Auth"/>
         </div>
       </tab-content>
     </form-wizard>
 
 <!--    Login Modal-->
     <auth-modal title="Sign In" @close="handleLogin" :show-modal="showLoginModal">
-      <img slot="image" src="~/assets/img/auth-woman.png" class="max-w-[220px] mt-16 object-contain" alt="Auth Woman"/>
+      <img slot="image" src="@/assets/img/auth-woman.png" class="max-w-[220px] mt-16 object-contain" alt="Auth Woman"/>
       <form class="flex flex-col gap-5" slot="form" @submit.prevent="handleLoginSubmit">
         <base-input
           v-model="fieldsData.email"
@@ -91,7 +91,7 @@
     </auth-modal>
 <!--    Signup Modal-->
     <auth-modal title="Sign Up" @close="handleSignup" :show-modal="showSignupModal">
-      <img slot="image" src="~/assets/img/auth-woman-2.png" class="max-w-[220px] mt-16 object-contain" alt="Auth Woman"/>
+      <img slot="image" src="@/assets/img/auth-woman-2.png" class="max-w-[220px] mt-16 object-contain" alt="Auth Woman"/>
       <form class="flex flex-col gap-5" slot="form" @submit.prevent="handleSignupSubmit">
         <base-input
           v-model="signupFieldsData.userName"
@@ -131,12 +131,12 @@
 
 <script>
 
-import ServiceCard from "~/components/reservation/common/cards/service-card";
+import ServiceCard from "@/components/reservation/common/cards/service-card";
 import VueCal from 'vue-cal'
-import BaseButton from "~/components/reservation/common/buttons/base-button";
-import BaseModal from "~/components/reservation/common/modal/base-modal";
-import BaseInput from "~/components/reservation/common/form/base-input";
-import AuthModal from "~/components/reservation/common/modal/auth-modal";
+import BaseButton from "@/components/reservation/common/buttons/base-button";
+import BaseModal from "@/components/reservation/common/modal/base-modal";
+import BaseInput from "@/components/reservation/common/form/base-input";
+import AuthModal from "@/components/reservation/common/modal/auth-modal";
 
 export default {
   components: {AuthModal, BaseInput, BaseModal, BaseButton, ServiceCard,VueCal},
