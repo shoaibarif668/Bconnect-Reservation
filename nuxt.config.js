@@ -30,11 +30,17 @@ export default {
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
+    '@/assets/css/main.css',
+    // 'vue-step-wizard/dist/vue-step-wizard.css'
+    'vue-form-wizard/dist/vue-form-wizard.min.css',
+    'vue-cal/dist/vuecal.css'
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     { src: "~/plugins/vue-tabulator.js", mode: "client", ssr: "false" },
+    "@/plugins/reservation-api.js",
+    "@/plugins/vue-step-wizard.js"
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -45,13 +51,23 @@ export default {
     // https://go.nuxtjs.dev/tailwindcss
     '@nuxtjs/tailwindcss',
     '@nuxtjs/color-mode',
+    '@nuxt/postcss8',
+    '@nuxtjs/fontawesome'
     // '~vue-tabulator/dist/scss/bootstrap/tabulator_bootstrap4',
   ],
 
+  fontawesome:{
+    icons:{
+      solid : true,
+      brands : true
+    }
+  },
+
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
+    'cookie-universal-nuxt',
     '@nuxtjs/axios',
-    '@nuxtjs/auth-next',
+    '@nuxtjs/auth-next'
   ],
 
   router: {
@@ -65,7 +81,7 @@ export default {
         url: process.env.API_URL || 'http://localhost:8080',
         endpoints: {
           login: {
-            url: '/login',
+            url: '/login'
             // method:
           },
           user: ''
@@ -89,6 +105,12 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-
+    postcss: {
+      plugins: {
+        tailwindcss: {},
+        autoprefixer: {}
+      }
+    }
   }
+
 }

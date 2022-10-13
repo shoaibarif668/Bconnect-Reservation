@@ -22,5 +22,6 @@
 <script>
 export default {
     auth: true,
+
 }
 </script>
