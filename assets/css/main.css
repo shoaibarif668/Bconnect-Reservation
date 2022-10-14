@@ -4,22 +4,23 @@
 
 @font-face {
   font-family: "Segoe UI";
-  src: url('~assets/fonts/segoe-ui.ttf') format("truetype");
-
+  src: local("Segoe UI"),
+  url('~assets/fonts/segoe-ui.ttf') format("truetype");
   font-weight: normal;
   font-style: normal;
 }
 @font-face {
   font-family: "Segoe UI";
-  src: url('~assets/fonts/segoe-ui-bold.ttf') format("truetype");
-
+  src: local("Segoe UI"),
+  url('~assets/fonts/segoe-ui-bold.ttf') format("truetype");
   font-weight: bold;
   font-style: normal;
 
 }
 @font-face {
   font-family: "Segoe UI";
-  src: url('~assets/fonts/segoe-ui-light.ttf') format("truetype");
+  src: local("Segoe UI"),
+  url('~assets/fonts/segoe-ui-light.ttf') format("truetype");
   font-weight:normal;
   font-style: normal;
 
