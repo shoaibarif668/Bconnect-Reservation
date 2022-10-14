@@ -1,7 +1,9 @@
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   target: 'static',
-
+  generate:{
+    fallback:true
+  },
   // publicRuntimeConfig: {
   //   baseURL: process.env.API_URL || 'http://localhost:8080',
   // },
