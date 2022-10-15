@@ -1,17 +1,10 @@
 
 export const ROUTES = {
-    HOME : "home",
-    ABOUT : "about",
-    CULTURE : "culture",
-    PROFILE : "profile",
-    SETTINGS : "settings",
-    SEARCH : "search",
-    ORGANIZATION : "organizationProfile",
-    ADD_EVENTS : "addEvents",
-    MANAGE_EVENTS : "manageEvents",
-    EVENTS : "events",
-    EVENTS_LIST : "eventsList",
-    EVENT : "singleEvent",
-    TICKETS : "tickets",
-    TICKET_ORDERS : "ticketOrders"
+    BOOKING:'/booking',
+    BOOKING_HISTORY:'/booking-history',
+    MANAGE_PROFESSIONALS:'/manage-professionals',
+    BUSINESS_SETTINGS:"/business-settings",
+    MANAGE_CLIENTS:'/manage-clients',
+    MANAGE_SERVICES:'/manage-services',
+    BUSINESS:'/business',
 }

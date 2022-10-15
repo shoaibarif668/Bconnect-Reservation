@@ -18,7 +18,7 @@ export default {
   components: {BaseModal, BaseButton},
   props:{
     title:{
-      type:Boolean,
+      type:String,
       required:true
     },
     showModal:{

@@ -5,8 +5,9 @@
       <website-logo/>
     </div>
     <h1 class="text-4xl text-dark__blue__cl font-bold">The Saloon Shop</h1>
-    <div>
-      <p class="text-dark__blue__cl">Username</p>
+    <div class="flex items-center gap-4">
+      <p class="text-dark__blue__cl font-normal">Username</p>
+      <profile-picture/>
     </div>
   </div>
 </template>
@@ -14,8 +15,9 @@
 <script>
 import MenuHamburger from "~/components/reservation/widgets/menu-hamburger";
 import WebsiteLogo from "~/components/reservation/common/website-logo";
+import ProfilePicture from "~/components/reservation/common/profile-picture";
 export default {
   name: "reservation-header",
-  components: {WebsiteLogo, MenuHamburger},
+  components: {ProfilePicture, WebsiteLogo, MenuHamburger},
 }
 </script>

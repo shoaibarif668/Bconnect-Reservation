@@ -1,6 +1,6 @@
 <template>
   <div>
-<!--    <img :class="customClasses" class="rounded-full object-cover" referrerpolicy="no-referrer" :src="userProfile?.isCompleteUrl ? userProfile.url : `${MEDIA_BASEURL}${userProfile.url}`" :alt="userName"/>-->
+    <img :class="customClasses" class="rounded-full object-cover max-w-[40px] max-h-[40px] h-full w-full" referrerpolicy="no-referrer" src="@/assets/img/placeholder.png" :alt="userName"/>
   </div>
 </template>
 

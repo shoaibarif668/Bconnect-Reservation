@@ -9,7 +9,7 @@
 import ReservationHeader from "~/components/reservation/widgets/reservation-header";
 export default {
   name: "reservation-layout",
-  components: {ReservationHeader}
+  components: {ReservationHeader},
 }
 </script>
 

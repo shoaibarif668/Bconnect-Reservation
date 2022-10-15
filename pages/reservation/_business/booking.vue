@@ -21,26 +21,7 @@
       </tab-content>
       <tab-content title="Book Professional" icon="">
         <h2 class="pb-2.5 text-xl text-dark__blue__cl font-bold">Booking for <span>{{ 'Service' }}</span></h2>
-        <vue-cal
-          :disable-views="['years', 'year', 'month','week']"
-          active-view="day"
-          :min-date="tomorrowsDate"
-          :events="events"
-          :no-event-overlaps="true"
-          @cell-click="onCellClick"
-          :split-days="customDaySplitLabels"
-          :selected-date="`${tomorrowsDate.getFullYear()}-${(tomorrowsDate.getMonth()+1)}-${tomorrowsDate.getDate()}`"
-          hide-view-selector
-          :disable-days="[]"
-          sticky-split-labels>
-          <template #split-label="{ split, view }">
-<!--            <i class="icon material-icons">person</i>-->
-           <div class="flex items-center gap-1">
-             <font-awesome-icon :style="`color: #${split.color}`" class="text-[`#${split.color}`]" :icon="['fa','user']"/>
-             <strong :style="`color: #${split.color}`">{{ split.label }}</strong>
-           </div>
-          </template>
-        </vue-cal>
+        <scheduling-calendar is-editable :custom-day-split-labels="customDaySplitLabels" :existing-events="events" @handle-event-push="(event)=>{}"/>
       </tab-content>
       <tab-content title="Confirm Booking" icon="">
         <div class="pb-12 pt-20  flex gap-24" v-if="!isUserLoggedIn">
@@ -67,79 +48,25 @@
     </form-wizard>
 
 <!--    Login Modal-->
-    <auth-modal title="Sign In" @close="handleLogin" :show-modal="showLoginModal">
-      <img slot="image" src="@/assets/img/auth-woman.png" class="max-w-[220px] mt-16 object-contain" alt="Auth Woman"/>
-      <form class="flex flex-col gap-5" slot="form" @submit.prevent="handleLoginSubmit">
-        <base-input
-          v-model="fieldsData.email"
-          placeholder="Email"
-          type="email"
-          custom-classes="max-w-[400px]"
-          required
-        />
-        <base-input
-          v-model="fieldsData.password"
-          placeholder="Password"
-          type="password"
-          custom-classes="max-w-[400px]"
-          required
-        />
-        <base-button is-submit-type custom-classes="w-full max-w-[400px] mt-5">
-          Sign In
-        </base-button>
-      </form>
-    </auth-modal>
+    <login-modal :show-login-modal="showLoginModal" @handle-login="handleLogin" />
 <!--    Signup Modal-->
-    <auth-modal title="Sign Up" @close="handleSignup" :show-modal="showSignupModal">
-      <img slot="image" src="@/assets/img/auth-woman-2.png" class="max-w-[220px] mt-16 object-contain" alt="Auth Woman"/>
-      <form class="flex flex-col gap-5" slot="form" @submit.prevent="handleSignupSubmit">
-        <base-input
-          v-model="signupFieldsData.userName"
-          placeholder="Username"
-          type="text"
-          custom-classes="max-w-[400px]"
-          required
-        />
-        <base-input
-          v-model="signupFieldsData.email"
-          placeholder="Email"
-          type="email"
-          custom-classes="max-w-[400px]"
-          required
-        />
-        <base-input
-          v-model="signupFieldsData.password"
-          placeholder="Password"
-          type="password"
-          custom-classes="max-w-[400px]"
-          required
-        />
-        <base-input
-          v-model="signupFieldsData.phoneNumber"
-          placeholder="Phone Number"
-          type="number"
-          custom-classes="max-w-[400px]"
-          required
-        />
-        <base-button is-submit-type custom-classes="w-full max-w-[400px] mt-5">
-          Sign Up
-        </base-button>
-      </form>
-    </auth-modal>
+    <signup-modal :show-signup-modal="showSignupModal" @handle-signup="handleSignup"/>
   </div>
 </template>
 
 <script>
 
 import ServiceCard from "@/components/reservation/common/cards/service-card";
-import VueCal from 'vue-cal'
 import BaseButton from "@/components/reservation/common/buttons/base-button";
 import BaseModal from "@/components/reservation/common/modal/base-modal";
 import BaseInput from "@/components/reservation/common/form/base-input";
 import AuthModal from "@/components/reservation/common/modal/auth-modal";
+import LoginModal from "~/components/reservation/features/auth/login-modal";
+import SignupModal from "~/components/reservation/features/auth/signup-modal";
+import SchedulingCalendar from "~/components/reservation/common/calendar/scheduling-calendar";
 
 export default {
-  components: {AuthModal, BaseInput, BaseModal, BaseButton, ServiceCard,VueCal},
+  components: {SchedulingCalendar, SignupModal, LoginModal, AuthModal, BaseInput, BaseModal, BaseButton, ServiceCard},
   auth:false,
   name: "booking",
   layout:"reservation-layout", //auto picks up from layout directory
@@ -147,7 +74,6 @@ export default {
     return{
       activeTabIndex: 0,
       selectedServices:[],
-      tomorrowsDate:new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
       customDaySplitLabels: [
         { label: 'John', color: Math.floor(Math.random()*16777215).toString(16), class: 'split1'},
         { label: 'Tom', color: Math.floor(Math.random()*16777215).toString(16), class: 'split2' },
@@ -178,18 +104,12 @@ export default {
       ],
       showLoginModal:false,
       showSignupModal:false,
-      isUserLoggedIn:false,
-      fieldsData:{
-        email:"",
-        password:""
-      },
-      signupFieldsData:{
-        userName:"",
-        phoneNumber:"",
-        email:"",
-        password:"",
+    }
+  },
 
-      }
+  computed:{
+    isUserLoggedIn(){
+      return this.$store.state.isUserLoggedIn
     }
   },
   methods: {
@@ -205,37 +125,12 @@ export default {
         }
       }
     },
-    onCellClick(e){
-      const date = new Date(e.date)
 
-      //If the user's date is greater than the selected date, then event is in the past.
-      const startingDate =  `${date.getFullYear()}-${(date.getMonth()+1)}-${date.getDate()} ${date.getHours()}:00`
-      const endingDate =  `${date.getFullYear()}-${(date.getMonth()+1)}-${date.getDate()} ${date.getHours()+1}:00`
-
-      this.events.push({
-        start: startingDate,
-        end: endingDate,
-        title: '',
-        class: 'newService',
-        background: true,
-        deletable: false,
-        resizable: false,
-        split: e.split
-      })
-    },
     handleLogin(isActive){
       this.showLoginModal = isActive
     },
     handleSignup(isActive){
       this.showSignupModal = isActive
-    },
-    handleLoginSubmit(){
-      this.isUserLoggedIn = true
-      this.showLoginModal = false
-    },
-    handleSignupSubmit(){
-      this.isUserLoggedIn = true
-      this.showSignupModal = false
     }
     // forceClearError() {
     //   this.$refs.wizard.tabs[this.activeTabIndex].validationError = null;
@@ -252,7 +147,6 @@ export default {
   },
   mounted() {
     // return this.$nuxt.error({ statusCode: 404, message: "This Business Does Not Exist" })
-
   },
   async fetch() {
    try{

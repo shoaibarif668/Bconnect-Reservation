@@ -43,6 +43,7 @@ module.exports = {
       //-----//
       dark__blue__cl : "#1B75BB",
       blue__cl : "#00ADEE",
+      gray__cl : '#ECECEC',
     }),
 
     /*--------------------------------*/
@@ -521,6 +522,9 @@ module.exports = {
       10: 'repeat(10, minmax(0, 1fr))',
       11: 'repeat(11, minmax(0, 1fr))',
       12: 'repeat(12, minmax(0, 1fr))',
+
+      //Dashboard Grid
+      dashboard__column:'3fr 1fr',
     },
     gridTemplateRows: {
       none: 'none',

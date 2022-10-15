@@ -6,7 +6,7 @@
       <span class="bottom"></span>
     </button>
     <transition name="translateX">
-      <nav v-show="navOpen" class="max-w-[400px] w-full bg-white fixed z-50 top-5 left-0 rounded-tr-[30px] rounded-br-[30px] drop-shadow-2xl overflow-y-auto">
+      <nav v-show="navOpen" class="rtl max-h-[90vh] h-fit overflow-y-auto max-w-[400px] w-full bg-white fixed z-50 top-5 left-0 rounded-tr-[30px] rounded-br-[30px] drop-shadow-2xl overflow-y-auto">
         <div class="sidemenu__wrapper">
           <div class="p-8 flex items-center justify-between shadow">
             <website-logo/>
@@ -15,41 +15,86 @@
             </button>
           </div>
           <ul class="sidemenu__list list-style">
-            <li class="sidemenu__item p-8 shadow">
-              <nuxt-link to="/reservation/adsd/booking" class="text-dark__blue__cl text-xl font-bold">Top</nuxt-link>
+            <li v-for="menu in menuList" :key="menu.title">
+
+<!--              For Normal Links-->
+              <div v-if="!!menu.link" class="sidemenu__item p-8 shadow">
+                <nuxt-link :to="`/reservation/adsd${menu.link}`" class="text-dark__blue__cl text-xl font-bold">{{ menu.title }}</nuxt-link>
+              </div>
+
+<!--              For Links With Children-->
+              <div>
+                <div v-if="!menu.link && !!menu.children" class="sidemenu__item p-8 shadow flex items-center justify-between">
+                  <button class="text-dark__blue__cl text-xl font-bold list-style" @click="menuSubList[menu.title]=!menuSubList[menu.title]">
+                    {{ menu.title }}
+                  </button>
+                  <button @click="menuSubList[menu.title]=!menuSubList[menu.title]">
+                    <font-awesome-icon v-show="!menuSubList[menu.title]" :icon="['fa','chevron-left']" class="text-blue__cl text-xl "/>
+                    <font-awesome-icon v-show="menuSubList[menu.title]" :icon="['fa','chevron-down']" class="text-blue__cl text-xl "/>
+                  </button>
+                </div>
+                <ul v-if="menuSubList[menu.title]" v-for="child in menu.children" :key="child.title">
+                  <li v-if="child.link" class="sidemenu__item p-8 shadow">
+                    <nuxt-link :to="`/reservation/adsd${child.link}`" class="text-blue__cl text-xl font-bold">{{ child.title }}</nuxt-link>
+                  </li>
+                </ul>
+              </div>
+<!--              For Buttons-->
+              <div v-if="!(menu.link || menu.children) || false" class="sidemenu__item p-8 shadow">
+                <button class="text-dark__blue__cl text-xl font-bold" @click="()=>onMenuButtonClick(menu.title)">{{ menu.title }}</button>
+              </div>
             </li>
-            <li class="sidemenu__item p-8 shadow"><a href="" class="text-dark__blue__cl text-xl font-bold">About</a></li>
-            <li class="sidemenu__item p-8 shadow flex items-center justify-between">
-              <button class="text-dark__blue__cl text-xl font-bold list-style" @click="isBlogOpen=!isBlogOpen">
-                Blogs
-              </button>
-              <button @click="isBlogOpen=!isBlogOpen">
-                <font-awesome-icon v-show="!isBlogOpen" :icon="['fa','chevron-left']" class="text-blue__cl text-xl "/>
-                <font-awesome-icon v-show="isBlogOpen" :icon="['fa','chevron-down']" class="text-blue__cl text-xl "/>
-              </button>
-            </li>
-            <ul v-show="isBlogOpen">
-              <li class="sidemenu__item p-8 shadow"><a href="" class="text-dark__blue__cl text-xl font-bold">Blog 1</a></li>
-              <li class="sidemenu__item p-8 shadow"><a href="" class="text-dark__blue__cl text-xl font-bold">Blog 2</a></li>
-            </ul>
-            <li class="sidemenu__item p-8 shadow"><a href="" class="text-dark__blue__cl text-xl font-bold">Work</a></li>
-            <li class="sidemenu__item p-8 shadow"><a href="" class="text-dark__blue__cl text-xl font-bold">Link</a></li>
           </ul>
         </div>
       </nav>
     </transition>
+    <!--    Login Modal-->
+    <login-modal :show-login-modal="showLoginModal" @handle-login="showLoginModal = false" />
+    <!--    Signup Modal-->
+    <signup-modal :show-signup-modal="showSignupModal" @handle-signup="showSignupModal = false"/>
   </div>
+
 </template>
 
 <script>
 import WebsiteLogo from "~/components/reservation/common/website-logo";
+import {site} from "~/components/reservation/widgets/menu-list/site";
+import {business} from "~/components/reservation/widgets/menu-list/business";
+import {customer} from "~/components/reservation/widgets/menu-list/customer";
+import LoginModal from "~/components/reservation/features/auth/login-modal";
+import SignupModal from "~/components/reservation/features/auth/signup-modal";
+
 export default {
   name: "menu-hamburger",
-  components: {WebsiteLogo},
+  components: {SignupModal, LoginModal, WebsiteLogo,site,business},
   data(){
     return{
       navOpen:false,
-      isBlogOpen:false
+      showLoginModal:false,
+      showSignupModal:false,
+      menuList:this.$store.state.isUserLoggedIn ? business : site,
+      menuSubList:{'Manage Business':false}
+    }
+  },
+  computed: {
+    isUserLoggedIn () {
+      return this.$store.state.isUserLoggedIn
+    }
+  },
+  watch:{
+    isUserLoggedIn(){
+      this.menuList = this.$store.state.isUserLoggedIn ? business : site
+    }
+  },
+  methods:{
+    onMenuButtonClick(menuTitle) {
+      if(menuTitle === 'Login'){
+        this.showLoginModal = true
+      }else if(menuTitle === 'Logout'){
+        console.log('Logout')
+      }else if(menuTitle === 'Sign Up'){
+        this.showSignupModal = true
+      }
     }
   }
 }
@@ -57,9 +102,6 @@ export default {
 
 <style scoped>
 
-.list-style{
-  list-style: inside;
-}
 .sidemenu__btn {
   /*display: block;*/
   width: 25px;

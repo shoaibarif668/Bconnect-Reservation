@@ -21,7 +21,7 @@
   font-family: "Segoe UI";
   src: local("Segoe UI"),
   url('~assets/fonts/segoe-ui-light.ttf') format("truetype");
-  font-weight:normal;
+  font-weight:300;
   font-style: normal;
 
 }
