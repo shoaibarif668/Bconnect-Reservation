@@ -10,9 +10,6 @@ export const fetchBusinessServices =  {
       this.$fetch()
     }
   },
-  mounted() {
-    this.$fetch()
-  },
   async fetch() {
     try{
       let response = await this.$resAxios.get(`/service/all?businessId=1&page=1&limit=99`)
