@@ -47,6 +47,10 @@ export default {
   props:{
     showSignupModal:{
       type:Boolean
+    },
+    isBooking:{
+      type:Boolean,
+      default:false
     }
   },
   data() {
@@ -62,7 +66,11 @@ export default {
   methods: {
     handleSignupSubmit(){
       // this.isUserLoggedIn = true
+      this.$store.commit('HANDLE_IS_USER_LOGGED_IN',true)
       this.$emit('handle-signup',false)
+      if(this.isBooking){
+        this.$emit('handle-confirm-booking',true)
+      }
     },
   }
 }

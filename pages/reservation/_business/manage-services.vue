@@ -61,6 +61,7 @@ export default {
           image:"https://placebeard.it/640x360",
           name:"Nail Art",
           duration:"30 mins",
+          cardType: "Service"
         }
       ]
     }

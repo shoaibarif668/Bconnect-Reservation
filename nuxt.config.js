@@ -71,7 +71,6 @@ export default {
     '@nuxtjs/axios',
     '@nuxtjs/auth-next'
   ],
-
   router: {
     middleware: ["auth"]
   },

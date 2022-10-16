@@ -8,19 +8,8 @@ class TokenService {
     saveLocalAccessToken = (token,cookies) => {
       cookies.set(cookieAuth,token)
     }
-    getLocalRefreshToken = (cookies) => {
-        return cookies.get(cookieRefresh)
-    }
-    saveLocalRefreshToken = (token,cookies) => {
-      cookies.set(cookieRefresh,token)
-    }
+
     getUser = (cookies) => {
-        // try {
-        //     // return {}//JSON.parse(localStorage.getItem(cookieData));
-        //
-        // } catch{
-        //     return {}
-        // }
       return cookies.get(cookieData)
     }
     setUser = (user,cookies) => {
@@ -32,14 +21,7 @@ class TokenService {
         userObject[key] = value;
         this.setUser(userObject);
     }
-    setTokenRetries = (retries,cookies) => {
-        // localStorage.setItem(TOKEN_RETRIES,retries)
-      cookies.set(TOKEN_RETRIES,retries)
-    }
-    getTokenRetries = (cookies) => {
-        // return {}//localStorage.getItem(TOKEN_RETRIES)
-      return cookies.get(TOKEN_RETRIES)
-    }
+
     clearStorage = (cookies) => {
         // localStorage.clear();
         cookies.removeAll()

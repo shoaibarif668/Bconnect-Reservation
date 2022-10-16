@@ -33,13 +33,18 @@ export default {
   props:{
     showLoginModal:{
       type:Boolean
+    },
+    isBooking:{
+      type:Boolean,
+      default:false
     }
   },
   data() {
     return{
       fieldsData:{
         email:"",
-        password:""
+        password:"",
+        role:'Customer'
       }
     }
   },
@@ -48,6 +53,9 @@ export default {
       // this.isUserLoggedIn = true
       this.$store.commit('HANDLE_IS_USER_LOGGED_IN',true)
       this.$emit('handle-login',false)
+      if(this.isBooking){
+        this.$emit('handle-confirm-booking',true)
+      }
     },
   }
 }

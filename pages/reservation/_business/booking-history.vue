@@ -91,7 +91,7 @@ export default {
   auth:false,
   // layout:"reservation-layout",
   layout(){
-    const loggedInUserRole = 'Customer2' //From Cookies
+    const loggedInUserRole = 'Customer' //From Cookies
 
     if(loggedInUserRole === "Customer"){
       return 'reservation-layout'//this.$nuxt.setLayout('reservation-layout')

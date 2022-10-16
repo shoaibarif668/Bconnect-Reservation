@@ -1,7 +1,7 @@
 <template>
   <div class="reservation__main__wrapper">
     <business-header/>
-    <Nuxt/>
+    <Nuxt keep-alive :keep-alive-props="{ max: 10 }"/>
   </div>
 </template>
 
