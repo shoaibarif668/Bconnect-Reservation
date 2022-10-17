@@ -1,5 +1,4 @@
-import {cookieAuth, cookieData, cookieRefresh} from "@/utils/constants/cookies";
-import {TOKEN_RETRIES} from "@/utils/constants/tokens";
+import {cookieAuth, cookieData} from "@/utils/constants/cookies";
 
 class TokenService {
     getLocalAccessToken = (cookies) => {

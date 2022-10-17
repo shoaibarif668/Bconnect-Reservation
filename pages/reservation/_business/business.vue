@@ -39,6 +39,7 @@ export default {
     BookingCard, BaseButton, DashboardCard, DropdownItem, Dropdown, DropdownContent},
   auth:false,
   layout:"business-layout",
+  middleware:"reservation-protected",
   data(){
     return{
       customDaySplitLabels: [

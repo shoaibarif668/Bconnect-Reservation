@@ -1,9 +1,9 @@
 export const state = () => ({
-  isUserLoggedIn: false,
+  loggedInUserRole: null,
 })
 
 export const mutations = {
-  HANDLE_IS_USER_LOGGED_IN(state, isUserLoggedIn) {
-    state.isUserLoggedIn = isUserLoggedIn;
+  HANDLE_LOGGED_IN_USER_ROLE(state, loggedInUserRole) {
+    state.loggedInUserRole = loggedInUserRole;
   }
 }

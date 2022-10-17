@@ -10,7 +10,7 @@
   export default {
     components:{MEDIA_BASEURL},
     props:{
-      userProfile:Object,
+      userProfile:String,
       userName:String,
       customClasses:String
     }

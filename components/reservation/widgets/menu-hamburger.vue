@@ -19,7 +19,7 @@
 
 <!--              For Normal Links-->
               <div v-if="!!menu.link" class="sidemenu__item p-8 shadow">
-                <nuxt-link :to="`/reservation/adsd${menu.link}`" class="text-dark__blue__cl text-xl font-bold">{{ menu.title }}</nuxt-link>
+                <nuxt-link :to="`/reservation/${businessId()}${menu.link}`" class="text-dark__blue__cl text-xl font-bold">{{ menu.title }}</nuxt-link>
               </div>
 
 <!--              For Links With Children-->
@@ -35,7 +35,7 @@
                 </div>
                 <ul v-if="menuSubList[menu.title]" v-for="child in menu.children" :key="child.title">
                   <li v-if="child.link" class="sidemenu__item p-8 shadow">
-                    <nuxt-link :to="`/reservation/adsd${child.link}`" class="text-blue__cl text-xl font-bold">{{ child.title }}</nuxt-link>
+                    <nuxt-link :to="`/reservation/${businessId()}${child.link}`" class="text-blue__cl text-xl font-bold">{{ child.title }}</nuxt-link>
                   </li>
                 </ul>
               </div>
@@ -63,6 +63,10 @@ import {business} from "~/components/reservation/widgets/menu-list/business";
 import {customer} from "~/components/reservation/widgets/menu-list/customer";
 import LoginModal from "~/components/reservation/features/auth/login-modal";
 import SignupModal from "~/components/reservation/features/auth/signup-modal";
+import {ROLES} from "~/utils/constants";
+import TokenService from "~/services/token.service";
+import {businessIdFromURL} from "~/utils/helpers";
+import {ROUTES} from "~/utils/constants/routes";
 
 export default {
   name: "menu-hamburger",
@@ -72,18 +76,19 @@ export default {
       navOpen:false,
       showLoginModal:false,
       showSignupModal:false,
-      menuList:this.$store.state.isUserLoggedIn ? business : site,
+      businessId:()=>businessIdFromURL(this),
+      menuList:this.$store.state.loggedInUserRole ?  this.$store.state.loggedInUserRole === ROLES.BUSINESS ? business : customer : site,
       menuSubList:{'Manage Business':false}
     }
   },
   computed: {
     isUserLoggedIn () {
-      return this.$store.state.isUserLoggedIn
+      return this.$store.state.loggedInUserRole
     }
   },
   watch:{
     isUserLoggedIn(){
-      this.menuList = this.$store.state.isUserLoggedIn ? business : site
+      this.menuList = this.$store.state.loggedInUserRole ?  this.$store.state.loggedInUserRole === ROLES.BUSINESS ? business : customer : site
     }
   },
   methods:{
@@ -91,7 +96,10 @@ export default {
       if(menuTitle === 'Login'){
         this.showLoginModal = true
       }else if(menuTitle === 'Logout'){
-        console.log('Logout')
+        TokenService.clearStorage(this.$cookies)
+        this.$store.commit('HANDLE_LOGGED_IN_USER_ROLE',null)
+        this.$router.push(`/reservation/${businessIdFromURL(this)}${ROUTES.BOOKING}`)
+        this.navOpen = false
       }else if(menuTitle === 'Sign Up'){
         this.showSignupModal = true
       }

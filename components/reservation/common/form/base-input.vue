@@ -1,18 +1,12 @@
 <template>
-  <div>
-    <label v-show="label" class="text-lg text-primary__color">{{label}}</label>
-    <div v-show="description" class="pb-2">
-      <small class="text-sm font-light text-primary__color">{{description}}</small>
-    </div>
-    <input
-      v-bind="$attrs"
-      :placeholder="placeholder"
-      :class="`${customClasses} ${isBorderless ? `` : `border-0`}`"
-      class="rounded focus-visible:outline-none text-blue__cl text-sm font-normal p-4 w-full bg-gray__bg"
-      :value="modelValue"
-      @input="$emit('update:modelValue',$event.target.value)"
-    />
-  </div>
+  <input
+    v-bind="$attrs"
+    :placeholder="placeholder"
+    :class="`${customClasses} ${isBorderless ? `` : `border-0`}`"
+    class="rounded focus-visible:outline-none text-blue__cl text-sm font-normal p-4 w-full bg-gray__bg"
+    :value="modelValue"
+    @input="$emit('update:modelValue',$event.target.value)"
+  />
 </template>
 
 <script>

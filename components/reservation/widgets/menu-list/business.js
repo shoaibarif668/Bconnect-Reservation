@@ -6,6 +6,10 @@ export const business = [
     link:ROUTES.BUSINESS,
   },
   {
+    title:"Booking",
+    link:ROUTES.BOOKING,
+  },
+  {
     title:"Booking History",
     link:ROUTES.BOOKING_HISTORY,
   },

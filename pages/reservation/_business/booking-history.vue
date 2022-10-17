@@ -66,8 +66,12 @@
         </tbody>
       </base-table>
     </div>
-<!--    <customer-sidebar/>-->
-        <business-sidebar/>
+    <div v-if="loggedInUserRole === roles.CUSTOMER">
+      <customer-sidebar/>
+    </div>
+    <div v-if="loggedInUserRole === roles.BUSINESS">
+      <business-sidebar/>
+    </div>
   </section>
 </template>
 
@@ -81,6 +85,9 @@ import BaseButton from "~/components/reservation/common/buttons/base-button";
 import BookingCard from "~/components/reservation/common/cards/booking-card";
 import CustomerSidebar from "~/components/reservation/features/booking-history/customer-sidebar";
 import BusinessSidebar from "~/components/reservation/features/booking-history/business-sidebar";
+import {ROLES} from "~/utils/constants";
+import TokenService from "~/services/token.service";
+import {currentLoggedInUserRole} from "~/utils/helpers";
 
 export default {
   name: "booking-history",
@@ -89,11 +96,11 @@ export default {
     CustomerSidebar,
     BookingCard, BaseButton, BaseTable, DashboardCard, DropdownItem, Dropdown, DropdownContent},
   auth:false,
-  // layout:"reservation-layout",
-  layout(){
-    const loggedInUserRole = 'Customer' //From Cookies
-
-    if(loggedInUserRole === "Customer"){
+  middleware:"reservation-protected",
+  layout(self){
+    // console.log(self.store.state,"self")
+    const loggedInUserRole = currentLoggedInUserRole(self.$cookies)
+    if(loggedInUserRole === ROLES.CUSTOMER){
       return 'reservation-layout'//this.$nuxt.setLayout('reservation-layout')
     }else{
       return 'business-layout' // this.$nuxt.setLayout('business-layout')
@@ -103,6 +110,8 @@ export default {
     return{
       selectedFilter:'Upcoming',
       tableHeaders:['S No.','Date','Time','Services','Provider','Status'],
+      loggedInUserRole : currentLoggedInUserRole(this.$cookies),
+      roles : ROLES,
       history:[
         {
           date:'09-05-2022',

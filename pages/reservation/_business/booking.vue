@@ -2,7 +2,7 @@
   <div>
     <page-loader v-if="$fetchState.pending"/>
     <div class="px-48 relative mt-10">
-      <h1 class="text-blue__cl text-4xl font-bold absolute top-0 w-[24%]">Appointment Booking {{(isUserLoggedIn && activeTabIndex === 2) ? 'Completed Successfully' : ''}}</h1>
+      <h1 class="text-blue__cl text-4xl font-bold absolute top-0 w-[24%]">Appointment Booking {{((isUserLoggedIn === roles.CUSTOMER) && activeTabIndex === 2) ? 'Completed Successfully' : ''}}</h1>
 <!--      {{businessServices.data}}-->
       <form-wizard @on-complete="onComplete"
                    validate-on-back
@@ -36,7 +36,7 @@
           <error-message :is-error="isBookingEmpty" :message="`Please Book A Slot For ${currentServiceForProfessional.name || ''} To Continue`"/>
         </tab-content>
         <tab-content title="Confirm Booking" icon="">
-          <div class="pb-12 pt-10  flex gap-16" v-if="!isUserLoggedIn && !isBookingCompleted">
+          <div class="pb-12 pt-10  flex gap-16" v-if="(isUserLoggedIn !== roles.CUSTOMER) && !isBookingCompleted">
             <div class="flex items-center flex-col gap-16 w-full">
               <h2 class="text-dark__blue__cl font-bold text-4xl ">Finish booking now by creating an account</h2>
               <div class="flex items-center flex-col gap-5 w-full">
@@ -46,7 +46,7 @@
             </div>
             <img src="@/assets/img/auth-image.png" class="max-w-[50%]" alt="Auth"/>
           </div>
-          <div class="pb-12 pt-10  flex gap-16" v-if="isUserLoggedIn && !isBookingCompleted">
+          <div class="pb-12 pt-10  flex gap-16" v-if="(isUserLoggedIn === roles.CUSTOMER) && !isBookingCompleted">
             <div class="flex flex-col gap-16 w-full">
               <h2 class="text-dark__blue__cl font-bold text-4xl ">Confirm Your Booking</h2>
               <div class="flex items-center flex-col gap-5 w-full">
@@ -55,7 +55,7 @@
             </div>
             <img src="@/assets/img/auth-image.png" class="max-w-[50%]" alt="Auth"/>
           </div>
-          <div class="pb-12 pt-10  flex gap-16" v-if="isUserLoggedIn && isBookingCompleted">
+          <div class="pb-12 pt-10  flex gap-16" v-if="(isUserLoggedIn !== roles.CUSTOMER) && isBookingCompleted">
             <div class="flex flex-col pt-10 border-t-2 border-dark__blue__cl">
               <h2 class="text-dark__blue__cl font-bold text-4xl pb-10"><span class="text-blue__cl">Aly</span> will be waiting for you on
                 <span class="text-blue__cl">Mon, Sept 5 12:00 - 13:00</span> </h2>
@@ -107,6 +107,7 @@ import PageLoader from "~/components/reservation/common/loaders/page-loader";
 import {fetchBusinessServices} from "~/mixins";
 import ErrorMessage from "~/components/reservation/common/messages/error-message";
 import ConfirmBookingModal from "~/components/reservation/features/booking/confirm-booking-modal";
+import {ROLES} from "~/utils/constants";
 
 export default {
   components: {
@@ -116,10 +117,12 @@ export default {
     SchedulingCalendar, SignupModal, LoginModal, AuthModal, BaseInput, BaseModal, BaseButton, ServiceCard},
   mixins:[fetchBusinessServices],
   auth:false,
+  middleware:"reservation-protected",
   name: "booking",
   layout:"reservation-layout", //auto picks up from layout directory
   data() {
     return{
+      roles:ROLES,
       activeTabIndex: 0,
       selectedServices:[],
       isServicesEmpty:false,
@@ -173,7 +176,7 @@ export default {
   },
   computed:{
     isUserLoggedIn(){
-      return this.$store.state.isUserLoggedIn
+      return (this.$store.state.loggedInUserRole)
     }
   },
 

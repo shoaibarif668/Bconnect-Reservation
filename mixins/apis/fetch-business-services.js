@@ -12,7 +12,7 @@ export const fetchBusinessServices =  {
   },
   async fetch() {
     try{
-      let response = await this.$resAxios.get(`/service/all?businessId=1&page=1&limit=99`)
+      let response = await this.$api.get(`/service/all?businessId=1&page=1&limit=99`)
       this.businessServices = response?.data
     }
     catch (e) {

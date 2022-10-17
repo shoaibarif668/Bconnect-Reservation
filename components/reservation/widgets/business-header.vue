@@ -15,10 +15,8 @@
 
       </div>
     </div>
-    <div class="flex items-center gap-4">
-      <p class="text-dark__blue__cl font-normal">Username</p>
-      <profile-picture/>
-    </div>
+    <div v-if="!isCustomerLoggedIn"></div>
+    <top-bar-user-info :is-logged-in="isCustomerLoggedIn" :user-name="userData.userName || ''" :profile-picture="isCustomerLoggedIn.profilePicture || ''"/>
   </div>
 </template>
 
@@ -26,14 +24,17 @@
 import MenuHamburger from "~/components/reservation/widgets/menu-hamburger";
 import WebsiteLogo from "~/components/reservation/common/website-logo";
 import BaseSelect from "~/components/reservation/common/form/base-select";
-import ProfilePicture from "~/components/reservation/common/profile-picture";
+import customerHeaderInfo from "~/mixins/customer-header-info";
+import TopBarUserInfo from "~/components/reservation/widgets/top-bar-user-info";
+
 export default {
   name: "business-header",
-  components: {ProfilePicture, BaseSelect, WebsiteLogo, MenuHamburger},
+  components: {TopBarUserInfo, BaseSelect, WebsiteLogo, MenuHamburger},
+  mixins:[customerHeaderInfo],
   data(){
     return{
       professional:"Select Professional",
-      client:"Select Client"
+      client:"Select Client",
     }
   }
 }
