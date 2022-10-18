@@ -1,16 +1,16 @@
 import {businessIdFromURL} from "~/utils/helpers";
 
-export const fetchBusinessBookings =  {
+export const fetchClientBookings =  {
   data(){
     return{
-      businessBookings:[],
+      clientBookings:[],
     }
   },
   methods:{
-    async fetchBusinessBookingsService(isPrev){
+    async fetchClientBookingsService(isPrev){
       try{
         let response = await this.$api.get(`/booking/business/filter?businessId=${businessIdFromURL(this)}&page=1&limit=99&isPrevious=${isPrev}`)
-        this.businessBookings = response?.data?.data
+        this.clientBookings = response?.data?.data
       }
       catch (e) {
         console.log(e, "1")

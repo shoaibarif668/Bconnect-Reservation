@@ -23,7 +23,7 @@ export const handleLogin =  {
           this.$store.commit('HANDLE_LOGGED_IN_USER_ROLE',response.data?.data?.user?.isBusiness ? ROLES.BUSINESS : ROLES.CUSTOMER)
           this.$emit('handle-login',false)
           if(this.isBooking){
-            this.$emit('handle-confirm-booking',true)
+            this.$emit('handle-confirm-booking',true,response.data?.data?.user?._id)
           }
         })
         .catch((e)=>{

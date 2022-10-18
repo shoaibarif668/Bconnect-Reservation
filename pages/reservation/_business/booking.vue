@@ -1,95 +1,108 @@
 <template>
   <div>
-    <page-loader v-if="$fetchState.pending"/>
-    <div class="px-48 relative mt-10">
-      <h1 class="text-blue__cl text-4xl font-bold absolute top-0 w-[24%]">Appointment Booking {{((isUserLoggedIn === roles.CUSTOMER) && activeTabIndex === 2) ? 'Completed Successfully' : ''}}</h1>
-<!--      {{businessServices.data}}-->
-      <form-wizard @on-complete="onComplete"
-                   validate-on-back
-                   ref="wizard"
-                   :start-index.sync="activeTabIndex"
-                   shape="square"
-                   color="#20a0ff"
-                   error-color="#ff4949"
-                   title=""
-                   subtitle=""
-                   :hide-buttons="activeTabIndex === 2"
-      >
-        <tab-content :beforeChange="beforeServiceTabChange" title="Services" icon="">
-          <h6 class="pt-5 text-2xl font-normal text-dark__blue__cl">Select Services</h6>
-          <div class="pt-5 pb-12 grid grid-cols-3 gap-10"  v-if="(Array.isArray(businessServices.data) ? businessServices.data.length : 0) > 0">
-            <div v-for="(service,index) in businessServices.data" :key="index">
-              <service-card :service="service" @handle-services-selection="handleServicesSelection"/>
-            </div>
-          </div>
-          <error-message :is-error="isServicesEmpty" message="Please Select One Or More Services"/>
-        </tab-content>
-        <tab-content title="Book Professional" icon="" :beforeChange="beforeBookProfessionalTabChange">
-          <h6 class="pt-5 pb-5 text-2xl font-normal text-dark__blue__cl">Booking for <span>{{ currentServiceForProfessional.name || '' }}</span></h6>
-          <scheduling-calendar
-            :is-editable="!isLockBookingEditing"
-            :custom-day-split-labels="customDaySplitLabels"
-            :existing-events="events"
-            @handle-event-push="handleNewEventPush"
-            :current-service="currentServiceForProfessional"
-          />
-          <error-message :is-error="isBookingEmpty" :message="`Please Book A Slot For ${currentServiceForProfessional.name || ''} To Continue`"/>
-        </tab-content>
-        <tab-content title="Confirm Booking" icon="">
-          <div class="pb-12 pt-10  flex gap-16" v-if="(isUserLoggedIn !== roles.CUSTOMER) && !isBookingCompleted">
-            <div class="flex items-center flex-col gap-16 w-full">
-              <h2 class="text-dark__blue__cl font-bold text-4xl ">Finish booking now by creating an account</h2>
-              <div class="flex items-center flex-col gap-5 w-full">
-                <base-button :click-handler="()=>handleLogin(true)">Sign In</base-button>
-                <base-button :click-handler="()=>handleSignup(true)">Sign Up</base-button>
-              </div>
-            </div>
-            <img src="@/assets/img/auth-image.png" class="max-w-[50%]" alt="Auth"/>
-          </div>
-          <div class="pb-12 pt-10  flex gap-16" v-if="(isUserLoggedIn === roles.CUSTOMER) && !isBookingCompleted">
-            <div class="flex flex-col gap-16 w-full">
-              <h2 class="text-dark__blue__cl font-bold text-4xl ">Confirm Your Booking</h2>
-              <div class="flex items-center flex-col gap-5 w-full">
-                <base-button :click-handler="()=>handleConfirmBooking(true)">Confirm Booking</base-button>
-              </div>
-            </div>
-            <img src="@/assets/img/auth-image.png" class="max-w-[50%]" alt="Auth"/>
-          </div>
-          <div class="pb-12 pt-10  flex gap-16" v-if="(isUserLoggedIn !== roles.CUSTOMER) && isBookingCompleted">
-            <div class="flex flex-col pt-10 border-t-2 border-dark__blue__cl">
-              <h2 class="text-dark__blue__cl font-bold text-4xl pb-10"><span class="text-blue__cl">Aly</span> will be waiting for you on
-                <span class="text-blue__cl">Mon, Sept 5 12:00 - 13:00</span> </h2>
-              <h3 class="text-dark__blue__cl text-xl pb-10">You will receive a confirmation SMS shortly.</h3>
-              <base-button custom-classes="mb-5" :click-handler="()=>{}">View Booking History</base-button>
-              <base-button :click-handler="()=>{}">Book New Appointment</base-button>
-            </div>
-            <img src="@/assets/img/booking-completed.png" class="max-w-[50%] object-contain" alt="Auth"/>
-          </div>
-        </tab-content>
-      </form-wizard>
+<!--    validate-on-back-->
 
-      <!--    Login Modal-->
-      <login-modal
-        :show-login-modal="showLoginModal"
-        @handle-login="handleLogin"
-        is-booking
-        @handle-confirm-booking="handleConfirmBooking"
-      />
-      <!--    Signup Modal-->
-      <signup-modal
-        :show-signup-modal="showSignupModal"
-        @handle-signup="handleSignup"
-        is-booking
-        @handle-confirm-booking="handleConfirmBooking"
-      />
-      <!--    Confirm Booking Modal-->
-      <confirm-booking-modal
-        :final-booking-data="{}"
-        :show-confirm-booking-modal="showConfirmBookingModal"
-        @handle-confirm-booking="handleConfirmBooking"
-        @handle-confirm-completed="isBookingCompleted = true"
-      />
-    </div>
+    <client-only>
+      <page-loader v-if="$fetchState.pending || isFetchBusinessServiceLoading || isFetchBookingsByServiceLoading"/>
+      <div class="px-48 relative mt-10">
+        <h1 class="text-blue__cl text-4xl font-bold absolute top-0 w-[24%]">Appointment Booking {{((isUserLoggedIn === roles.CUSTOMER) && activeTabIndex === 2) ? 'Completed Successfully' : ''}}</h1>
+        <form-wizard ref="wizard"
+                     :start-index.sync="activeTabIndex"
+                     shape="square"
+                     color="#20a0ff"
+                     error-color="#ff4949"
+                     title=""
+                     subtitle=""
+                     :hide-buttons="activeTabIndex === 2"
+        >
+          <tab-content :beforeChange="beforeServiceTabChange" title="Services" icon="">
+            <h6 class="pt-5 text-2xl font-normal text-dark__blue__cl">Select Services</h6>
+            <div class="pt-5 pb-12 grid grid-cols-3 gap-10"  v-if="(Array.isArray(businessServices.data) ? businessServices.data.length : 0) > 0">
+              <div v-for="(service,index) in businessServices.data" :key="index">
+                <service-card :service="service" @handle-services-selection="handleServicesSelection"/>
+              </div>
+            </div>
+            <error-message :is-error="isServicesEmpty" message="Please Select One Or More Services"/>
+          </tab-content>
+          <tab-content title="Book Professional"  icon="" :beforeChange="beforeBookProfessionalTabChange">
+            <div v-if="businessProfessionalsByService && businessProfessionalsByService.length <= 0" class="my-5">
+              <div class="p-14 bg-peach__bg shadow border-0 rounded-[20px]">
+                <h1 class="text-center text-dark__blue__cl font-bold text-4xl">No Professionals Available For {{currentServiceForProfessional.name }}.</h1>
+              </div>
+            </div>
+            <div v-if="businessProfessionalsByService && businessProfessionalsByService.length > 0">
+              <h6 class="pt-5 pb-5 text-2xl font-normal text-dark__blue__cl">Booking for <span>{{ currentServiceForProfessional.name || '' }}</span></h6>
+              <scheduling-calendar
+                ref="schedulingCalendar"
+                :is-editable="!isLockBookingEditing"
+                :business-schedule="businessSchedule && businessSchedule.schedule"
+                :professionals-by-service="businessProfessionalsByService"
+                :existing-events="businessBookingsByService"
+                @handle-event-push="handleNewEventPush"
+                :current-service="currentServiceForProfessional"
+              />
+            </div>
+
+            <error-message :is-error="isBookingEmpty" :message="`Please Book A Slot For ${currentServiceForProfessional.name || ''} To Continue`"/>
+          </tab-content>
+          <tab-content title="Confirm Booking" icon="">
+            <div class="pb-12 pt-10  flex gap-16" v-if="(isUserLoggedIn !== roles.CUSTOMER) && !isBookingCompleted">
+              <div class="flex items-center flex-col gap-16 w-full">
+                <h2 class="text-dark__blue__cl font-bold text-4xl ">Finish booking now by creating an account</h2>
+                <div class="flex items-center flex-col gap-5 w-full">
+                  <base-button :click-handler="()=>handleLogin(true)">Sign In</base-button>
+                  <base-button :click-handler="()=>handleSignup(true)">Sign Up</base-button>
+                </div>
+              </div>
+              <img src="@/assets/img/auth-image.png" class="max-w-[50%]" alt="Auth"/>
+            </div>
+            <div class="pb-12 pt-10  flex gap-16" v-if="(isUserLoggedIn === roles.CUSTOMER) && !isBookingCompleted">
+              <div class="flex flex-col gap-16 w-full">
+                <h2 class="text-dark__blue__cl font-bold text-4xl ">Confirm Your Booking</h2>
+                <div class="flex items-center flex-col gap-5 w-full">
+                  <base-button :click-handler="()=>handleConfirmBooking(true)">Confirm Booking</base-button>
+                </div>
+              </div>
+              <img src="@/assets/img/auth-image.png" class="max-w-[50%]" alt="Auth"/>
+            </div>
+            <div class="pb-12 pt-10  flex gap-16" v-if="(isUserLoggedIn === roles.CUSTOMER) && isBookingCompleted">
+              <div class="flex flex-col pt-10 border-t-2 border-dark__blue__cl">
+                <h2 class="text-dark__blue__cl font-bold text-4xl pb-10"><span class="text-blue__cl">{{ addEvent && addEvent.length > 1 ? `${addEvent[0] && addEvent[0].professionalName} and others` : addEvent[0] && addEvent[0].professionalName}}</span> will be waiting for you on
+                  <span class="text-blue__cl">{{ Date.parse(new Date(addEvent[0] && addEvent[0].start).toDateString()) ? new Date(addEvent[0] && addEvent[0].start).toDateString() : '' }}</span> </h2>
+                <h3 class="text-dark__blue__cl text-xl pb-10">You will receive a confirmation SMS shortly.</h3>
+                <base-button custom-classes="mb-5" :click-handler="()=>$router.push(`/reservation/${$route.params.business}${routes.BOOKING_HISTORY}`)">View Booking History</base-button>
+                <base-button :click-handler="bookNewAppointment">Book New Appointment</base-button>
+              </div>
+              <img src="@/assets/img/booking-completed.png" class="max-w-[50%] object-contain" alt="Auth"/>
+            </div>
+          </tab-content>
+        </form-wizard>
+
+        <!--    Login Modal-->
+        <login-modal
+          :show-login-modal="showLoginModal"
+          @handle-login="handleLogin"
+          is-booking
+          @handle-confirm-booking="handleConfirmBooking"
+        />
+        <!--    Signup Modal-->
+        <signup-modal
+          :show-signup-modal="showSignupModal"
+          @handle-signup="handleSignup"
+          is-booking
+          @handle-confirm-booking="handleConfirmBooking"
+        />
+        <!--    Confirm Booking Modal-->
+        <confirm-booking-modal
+          :final-booking-data="addEvent"
+          :user-id="loggedInUserId"
+          :show-confirm-booking-modal="showConfirmBookingModal"
+          @handle-confirm-booking="handleConfirmBooking"
+          @handle-confirm-completed="handleBookingCompleted"
+        />
+      </div>
+    </client-only>
+
   </div>
 </template>
 
@@ -108,7 +121,11 @@ import {fetchBusinessServices} from "~/mixins";
 import ErrorMessage from "~/components/reservation/common/messages/error-message";
 import ConfirmBookingModal from "~/components/reservation/features/booking/confirm-booking-modal";
 import {ROLES} from "~/utils/constants";
+import {fetchBusinessSchedule} from "~/mixins/apis/settings-fetch/fetch-business-schedule";
+import {fetchProfessionalsByService} from "~/mixins/apis/settings-fetch/fetch-professionals-by-service";
+import {fetchBookingsByService} from "~/mixins/apis/settings-fetch/fetch-bookings-by-service";
 import {businessIdFromURL} from "~/utils/helpers";
+import {ROUTES} from "~/utils/constants/routes";
 
 export default {
   components: {
@@ -116,9 +133,8 @@ export default {
     ErrorMessage,
     PageLoader,
     SchedulingCalendar, SignupModal, LoginModal, AuthModal, BaseInput, BaseModal, BaseButton, ServiceCard},
-  mixins:[fetchBusinessServices],
+  mixins:[fetchBusinessServices,fetchBusinessSchedule,fetchProfessionalsByService,fetchBookingsByService],
   auth:false,
-  // middleware:"reservation-protected",
   name: "booking",
   layout:"reservation-layout", //auto picks up from layout directory
   data() {
@@ -128,44 +144,6 @@ export default {
       selectedServices:[],
       isServicesEmpty:false,
       currentServiceForProfessional:{},
-      customDaySplitLabels: [
-        { label: 'John', color: Math.floor(Math.random()*16777215).toString(16), class: 'split1'},
-        { label: 'Tom', color: Math.floor(Math.random()*16777215).toString(16), class: 'split2' },
-        { label: 'Kate', color: Math.floor(Math.random()*16777215).toString(16), class: 'split3' },
-        { label: 'Jess', color: Math.floor(Math.random()*16777215).toString(16), class: 'split4' }
-      ],
-      events: [
-        {
-          start: `2022-10-18 12:00`,
-          end: `2022-10-18 13:00`,
-          title: 'Booked',
-          class: 'booked',
-          background: true,
-          deletable: false,
-          resizable: false,
-          split: 1
-        },
-        {
-          start: `2022-10-18 14:00`,
-          end: `2022-10-18 15:00`,
-          title: 'Booked',
-          class: 'booked',
-          background: true,
-          deletable: false,
-          resizable: false,
-          split: 2
-        },
-        {
-          start: `2022-10-18 16:00`,
-          end: `2022-10-18 17:00`,
-          title: 'Lunch',
-          class: 'lunch',
-          background: true,
-          deletable: false,
-          resizable: false,
-          split:3
-        }
-      ],
       addEvent:[],
       isBookingEmpty:false,
       isLockBookingEditing:false,
@@ -173,12 +151,14 @@ export default {
       showSignupModal:false,
       showConfirmBookingModal:false,
       isBookingCompleted:false,
+      loggedInUserId:'',
+      routes:ROUTES
     }
   },
   computed:{
     isUserLoggedIn(){
       return (this.$store.state.loggedInUserRole)
-    }
+    },
   },
   activated() {
     if (this.$fetchState.timestamp <=  Date.now() - 30000) {
@@ -187,17 +167,25 @@ export default {
   },
   async fetch() {
     await this.fetchBusinessServiceService()
+    await this.fetchBusinessSchedule()
   },
   methods: {
-    beforeServiceTabChange(){
+    async beforeServiceTabChange(){
       this.isServicesEmpty = !!this.selectedServices?.length <= 0
-      if(!this.selectedServices?.length <= 0){
+      if(!this.isServicesEmpty){
+        this.isLockBookingEditing = false
+        this.addEvent = [] //Empty Added Bookings Before Going To Calendar
+
         this.currentServiceForProfessional = this.selectedServices[0]
+        // await Promise.all([this.fetchBusinessProfessionalsByService(this.currentServiceForProfessional?._id),this.fetchBusinessBookingsByService(this.currentServiceForProfessional?._id)])
+        await this.fetchBusinessProfessionalsByService(this.currentServiceForProfessional?._id)
+        await this.fetchBusinessBookingsByService(this.currentServiceForProfessional?._id)
+
+        if(this.businessProfessionalsByService?.length > 0){
+          this.$refs.schedulingCalendar.unavailableSlots()
+        }
       }
-      return !this.selectedServices?.length <= 0
-    },
-    onComplete() {
-      alert("Yay. Done!");
+      return !this.isServicesEmpty
     },
     handleServicesSelection(service,action){
       if(action === 'add'){
@@ -209,7 +197,7 @@ export default {
       }
       this.isServicesEmpty = !!this.selectedServices?.length <= 0
     },
-    beforeBookProfessionalTabChange(){
+    async beforeBookProfessionalTabChange(){
       const currentIndex = this.selectedServices?.findIndex(el => el?._id ===this.currentServiceForProfessional?._id)
       //If Booking's length is not the same as the current index that means booking is not added in this session
       if(this.addEvent?.length !== currentIndex+1){
@@ -222,6 +210,10 @@ export default {
       //if selected services length is more than current service
       if(this.selectedServices?.length > currentIndex+1){
         this.currentServiceForProfessional = this.selectedServices[currentIndex+1]
+
+        // await Promise.all([this.fetchBusinessProfessionalsByService(this.currentServiceForProfessional?._id),this.fetchBusinessBookingsByService(this.currentServiceForProfessional?._id)])
+        await this.fetchBusinessProfessionalsByService(this.currentServiceForProfessional?._id)
+        await this.fetchBusinessBookingsByService(this.currentServiceForProfessional?._id)
         return false
       }else {
         this.isLockBookingEditing = true
@@ -242,8 +234,20 @@ export default {
     handleSignup(isActive){
       this.showSignupModal = isActive
     },
-    handleConfirmBooking(isActive){
+    handleConfirmBooking(isActive,userId){
       this.showConfirmBookingModal = isActive
+      this.loggedInUserId = userId
+    },
+    handleBookingCompleted(){
+      this.isBookingCompleted = true
+    },
+    bookNewAppointment(){
+      this.addEvent = []
+      this.isLockBookingEditing = false
+      this.isBookingCompleted = false
+      this.$refs.wizard.reset()
+      console.log(this.activeTabIndex,"this.activeTabIndex")
+      this.$fetch()
     }
   }
 }

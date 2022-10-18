@@ -3,14 +3,14 @@ import {businessIdFromURL} from "~/utils/helpers";
 export const fetchBookingStats =  {
   data(){
     return{
-      bookingStats:{},
+      bookingStats:[],
     }
   },
   methods:{
     async fetchBookingStatsService(){
       try{
         let response = await this.$api.get(`/booking/stats?businessId=${businessIdFromURL(this)}`)
-        this.bookingStats = response?.data?.data
+        this.bookingStats = response.data?.data
       }
       catch (e) {
         console.log(e, "1")

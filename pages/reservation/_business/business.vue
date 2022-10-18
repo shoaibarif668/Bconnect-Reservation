@@ -15,9 +15,8 @@
       </div>
 
       <scheduling-calendar :custom-day-split-labels="customDaySplitLabels" :existing-events="events" @handle-event-push="(event)=>{}"/>
-
     </div>
-    <business-sidebar/>
+    <business-sidebar :appointment="'Upcoming'" :booking-data="[]"/>
   </section>
 </template>
 

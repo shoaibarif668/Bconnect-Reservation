@@ -3,26 +3,26 @@
     <div class="mb-5 pb-5 border-b border-dark__blue__cl">
       <base-button :click-handler="()=>$router.push(`/reservation/${businessId()}${routes.BOOKING}`)">Book New Appointment</base-button>
     </div>
-    <h5 class="text-dark__blue__cl text-center pb-5 text-lg ">Previous Appointments</h5>
-    <div class="flex flex-col items-center gap-5">
-      <booking-card :price="120" professional="Aly" timing="12:00-13:00" :services="['Nail Art','Styling']"/>
-      <booking-card :price="120" professional="Aly" timing="12:00-13:00" :services="['Nail Art','Styling']"/>
-      <booking-card :price="120" professional="Aly" timing="12:00-13:00" :services="['Nail Art','Styling']"/>
-      <booking-card :price="120" professional="Aly" timing="12:00-13:00" :services="['Nail Art','Styling']"/>
-      <booking-card :price="120" professional="Aly" timing="12:00-13:00" :services="['Nail Art','Styling']"/>
-    </div>
+    <booking-list :appointment-type="appointment || ''" :bookings="[]"/>
   </div>
 </template>
 
 <script>
 import BaseButton from "~/components/reservation/common/buttons/base-button";
-import BookingCard from "~/components/reservation/common/cards/booking-card";
 import {ROUTES} from "~/utils/constants/routes";
 import {businessIdFromURL} from "~/utils/helpers";
+import BookingList from "~/components/reservation/features/booking-history/booking-list";
 
 export default {
   name: "customer-sidebar",
-  components: {BookingCard, BaseButton},
+  components: {BookingList, BaseButton},
+  props:{
+    appointment:{
+      type:String,
+      default:'Previous'
+    },
+    bookingData:Array,
+  },
   data() {
     return {
       routes: ROUTES,

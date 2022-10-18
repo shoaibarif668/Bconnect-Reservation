@@ -10,26 +10,26 @@
         <span>Add Professional</span>
       </base-button>
     </div>
-    <h5 class="text-dark__blue__cl text-center pb-5 text-lg ">Upcoming Appointments</h5>
-    <div class="flex flex-col items-center gap-5">
-      <booking-card image="https://placebeard.it/640x360" :price="120" professional="Aly" timing="12:00-13:00" :services="['Nail Art','Styling']"/>
-      <booking-card image="https://placebeard.it/640x360" :price="120" professional="Aly" timing="12:00-13:00" :services="['Nail Art','Styling']"/>
-      <booking-card image="https://placebeard.it/640/360" :price="120" professional="Aly" timing="12:00-13:00" :services="['Nail Art','Styling']"/>
-      <booking-card image="https://placebeard.it/640/360" :price="120" professional="Aly" timing="12:00-13:00" :services="['Nail Art','Styling']"/>
-      <booking-card image="https://placebeard.it/640/360" :price="120" professional="Aly" timing="12:00-13:00" :services="['Nail Art','Styling']"/>
-    </div>
+    <booking-list :appointment-type="appointment || ''" :bookings="[]"/>
   </div>
 </template>
 
 <script>
 import BaseButton from "~/components/reservation/common/buttons/base-button";
-import BookingCard from "~/components/reservation/common/cards/booking-card";
 import {ROUTES} from "~/utils/constants/routes";
 import {businessIdFromURL} from "~/utils/helpers";
+import BookingList from "~/components/reservation/features/booking-history/booking-list";
 
 export default {
   name: "business-sidebar",
-  components: {BookingCard, BaseButton},
+  components: {BookingList, BaseButton},
+  props:{
+    appointment:{
+      type:String,
+      default:'Previous'
+    },
+    bookingData:Array,
+  },
   data() {
     return {
       routes: ROUTES,

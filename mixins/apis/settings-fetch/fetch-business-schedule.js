@@ -1,19 +1,21 @@
-import {businessIdFromURL} from "~/utils/helpers";
+import {businessIdFromURL, viewError} from "~/utils/helpers";
 
 export const fetchBusinessSchedule =  {
   data(){
     return{
       businessSchedule:{},
+      handleBusinessScheduleError:''
     }
   },
   methods:{
     async fetchBusinessSchedule(){
+      this.handleBusinessScheduleError = ''
       try{
         let response = await this.$api.get(`/business-setting/schedule/business?businessId=${businessIdFromURL(this)}`)
         this.businessSchedule = response?.data?.data?.workingSchedule?.[0]
       }
       catch (e) {
-        console.log(e, "1")
+        this.handleBusinessScheduleError = viewError(e)
       }
     }
   }

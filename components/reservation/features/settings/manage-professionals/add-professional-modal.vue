@@ -77,7 +77,7 @@
             >
               <option value="" disabled selected>Select Schedule Type</option>
               <option
-                v-for="option in ['Work','Break']"
+                v-for="option in [professionalSchedule.WORK,professionalSchedule.BREAK]"
                 :value="option"
                 :key="option"
                 :selected="option === schedule['type']"
@@ -110,6 +110,7 @@ import ErrorMessage from "~/components/reservation/common/messages/error-message
 import EditModal from "~/components/reservation/common/modal/edit-modal";
 import {handleAddProfessional} from "~/mixins/apis/settings/handle-add-professional";
 import {handleEditProfessional} from "~/mixins/apis/settings/handle-edit-professional";
+import {PROFESSIONAL_SCHEDULE} from "~/utils/constants";
 
 export default {
   name: "add-professional-modal",
@@ -154,6 +155,8 @@ export default {
       workingSchedule:[],
 
       validationError:"",
+
+      professionalSchedule:PROFESSIONAL_SCHEDULE,
     }
   },
   // computed:{
