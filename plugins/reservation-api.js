@@ -1,11 +1,10 @@
 import TokenService from "~/services/token.service";
 import {PUBLIC_ENDPOINTS} from "~/utils/constants";
+import {businessIdFromURL} from "~/utils/helpers";
+import {ROUTES} from "~/utils/constants/routes";
 
-export default function ({ $axios,app }, inject) {
-  const token = TokenService.getLocalAccessToken(app.$cookies) || "";
-  const userId = TokenService.getUser(app.$cookies)?._id
+export default function ({ $axios,app,redirect,route }, inject) {
 
-  // // Create a custom axios instance
   const api = $axios.create({
     headers: {
       common: {
@@ -21,6 +20,7 @@ export default function ({ $axios,app }, inject) {
   api.defaults.withCredentials = false
 
   api.onRequest((request)=>{
+    const token = TokenService.getLocalAccessToken(app.$cookies) || "";
     if(token && !PUBLIC_ENDPOINTS.includes(request.url)){ //&& request.url !== `/auth/tokens?userId=${userId}`
       api.setToken(token, 'Bearer')
     }
@@ -28,8 +28,9 @@ export default function ({ $axios,app }, inject) {
 
   api.onError(error => {
     const code = parseInt(error.response && error.response.status)
-    if (code === 400) {
-      console.log('here')
+    if (code === 401) {
+      TokenService.clearStorage(app.$cookies)
+      redirect(`/reservation/${route.params?.business}${ROUTES.BOOKING}`)
     }
   })
 

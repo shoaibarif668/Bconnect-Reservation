@@ -1,11 +1,11 @@
 <template>
   <div class="bg-peach__bg w-full px-6 pt-10 pb-2.5 rounded-3xl max-h-[750px] h-full overflow-y-auto">
     <div class="mb-5 pb-5 border-b border-dark__blue__cl flex flex-col gap-2.5">
-      <base-button :click-handler="()=>$router.push(`/reservation/asd${routes.MANAGE_CLIENTS}`)" custom-classes="flex items-center gap-2 justify-center" :custom-classes="$route.fullPath === `/reservation/asd${routes.MANAGE_CLIENTS}` ? '!bg-white text-blue__cl' : ''">
+      <base-button :click-handler="()=>$router.push(`/reservation/${businessId()}${routes.MANAGE_CLIENTS}`)" custom-classes="flex items-center gap-2 justify-center" :custom-classes="$route.fullPath === `/reservation/${businessId()}${routes.MANAGE_CLIENTS}` ? '!bg-white text-blue__cl' : ''">
         <font-awesome-icon :icon="['fa','user-plus']"/>
         <span>Add Client</span>
       </base-button>
-      <base-button :click-handler="()=>$router.push(`/reservation/asd${routes.MANAGE_PROFESSIONALS}`)" custom-classes="flex items-center gap-2 justify-center" :custom-classes="$route.fullPath === `/reservation/asd${routes.MANAGE_PROFESSIONALS}` ? '!bg-white text-blue__cl' : ''">
+      <base-button :click-handler="()=>$router.push(`/reservation/${businessId()}${routes.MANAGE_PROFESSIONALS}`)" custom-classes="flex items-center gap-2 justify-center" :custom-classes="$route.fullPath === `/reservation/${businessId()}${routes.MANAGE_PROFESSIONALS}` ? '!bg-white text-blue__cl' : ''">
         <font-awesome-icon :icon="['fa','user-plus']"/>
         <span>Add Professional</span>
       </base-button>
@@ -18,11 +18,13 @@
           :name="card.name || ''"
           :days="card.days || ''"
           :timing="card.timing || ''"
+          :_id="card._id || ''"
           :email="card.email || ''"
           :duration="card.duration || ''"
-          :total-bookings="card.totalBookings || ''"
+          :joined="card.joined || ''"
           :card-type="card.cardType || ''"
-          @handle-card-selection="(name)=>$emit('handle-card-selection',name)"
+          :selected-card="currentSelectedCard === (card.name || '')"
+          @handle-card-selection="handleCardSelection"
         />
       </div>
 
@@ -34,17 +36,30 @@
 import BaseButton from "~/components/reservation/common/buttons/base-button";
 import {ROUTES} from "~/utils/constants/routes";
 import UserCard from "~/components/reservation/common/cards/user-card";
+import {businessIdFromURL} from "~/utils/helpers";
 
 export default {
   name: "business-manage-sidebar",
   components: {UserCard, BaseButton},
   props:{
     title:String,
-    cardDetails:Array
+    cardDetails:Array,
+
   },
   data() {
     return {
       routes: ROUTES,
+      currentSelectedCard: this.$route.query?.q ?
+        this.cardDetails.find(el=>el?._id === this.$route.query?.q)?.name ?
+          this.cardDetails.find(el=>el?._id === this.$route.query?.q)?.name : this.cardDetails[0]?.name
+        : this.cardDetails[0]?.name,
+      businessId : ()=>businessIdFromURL(this)
+    }
+  },
+  methods:{
+    handleCardSelection({name, id,media,duration}){
+      this.currentSelectedCard = name
+      this.$emit('handle-card-selection', {name, id, media, duration})
     }
   }
 }

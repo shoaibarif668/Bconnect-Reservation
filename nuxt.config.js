@@ -35,14 +35,16 @@ export default {
     '@/assets/css/main.css',
     // 'vue-step-wizard/dist/vue-step-wizard.css'
     'vue-form-wizard/dist/vue-form-wizard.min.css',
-    'vue-cal/dist/vuecal.css'
+    'vue-cal/dist/vuecal.css',
+    'vue2-datepicker/index.css'
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     { src: "~/plugins/vue-tabulator.js", mode: "client", ssr: "false" },
     "@/plugins/reservation-api.js",
-    "@/plugins/vue-step-wizard.js"
+    "@/plugins/vue-step-wizard.js",
+    '@/plugins/vue-datepicker.js'
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -69,7 +71,8 @@ export default {
   modules: [
     'cookie-universal-nuxt',
     '@nuxtjs/axios',
-    '@nuxtjs/auth-next'
+    '@nuxtjs/auth-next',
+    'nuxt-vue-multiselect'
   ],
   router: {
     middleware: ["auth"]

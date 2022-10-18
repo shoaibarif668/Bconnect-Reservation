@@ -1,7 +1,7 @@
 <template>
   <div class="bg-peach__bg w-full px-6 pt-10 pb-2.5 rounded-3xl max-h-[750px] h-full overflow-y-auto">
     <div class="mb-5 pb-5 border-b border-dark__blue__cl">
-      <base-button :click-handler="()=>$router.push(`/reservation/asd${routes.BOOKING}`)">Book New Appointment</base-button>
+      <base-button :click-handler="()=>$router.push(`/reservation/${businessId()}${routes.BOOKING}`)">Book New Appointment</base-button>
     </div>
     <h5 class="text-dark__blue__cl text-center pb-5 text-lg ">Previous Appointments</h5>
     <div class="flex flex-col items-center gap-5">
@@ -18,6 +18,7 @@
 import BaseButton from "~/components/reservation/common/buttons/base-button";
 import BookingCard from "~/components/reservation/common/cards/booking-card";
 import {ROUTES} from "~/utils/constants/routes";
+import {businessIdFromURL} from "~/utils/helpers";
 
 export default {
   name: "customer-sidebar",
@@ -25,6 +26,7 @@ export default {
   data() {
     return {
       routes: ROUTES,
+      businessId : ()=>businessIdFromURL(this)
     }
   }
 }

@@ -113,9 +113,9 @@
 
 <template>
   <transition name="modal-animation">
-    <div v-show="modalActive" class="modal">
+    <div v-show="modalActive" class="modal"  :class="`${!!baseModalCustomClass ? 'modal__custom__class' : ''}`">
       <transition name="modal-animation-inner">
-        <div v-show="modalActive" class="modal-inner bg-gray-50">
+        <div v-show="modalActive" class="modal-inner bg-gray-50" :class="baseModalCustomClass">
           <i @click="$emit('close')" class="far fa-times-circle"></i>
           <button @click="$emit('close')" class="absolute top-5 right-6 border-0 bg-white shadow rounded-full h-[55px] w-[55px] p-2.5" type="button">
             <font-awesome-icon class="text-2xl text-dark__blue__cl" :icon="['fa','xmark']" />
@@ -136,6 +136,9 @@
       modalActive:{
         type:Boolean,
         default:false
+      },
+      baseModalCustomClass:{
+        type:String
       }
     }
   }
@@ -143,6 +146,10 @@
 </script>
 
 <style scoped>
+.modal__custom__class{
+  padding-top: 60px !important;
+  padding-bottom: 60px !important;
+}
 .modal-animation-enter-active,
 .modal-animation-leave-active {
   transition: opacity 0.3s cubic-bezier(0.52, 0.02, 0.19, 1.02);

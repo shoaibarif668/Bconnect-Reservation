@@ -108,6 +108,7 @@ import {fetchBusinessServices} from "~/mixins";
 import ErrorMessage from "~/components/reservation/common/messages/error-message";
 import ConfirmBookingModal from "~/components/reservation/features/booking/confirm-booking-modal";
 import {ROLES} from "~/utils/constants";
+import {businessIdFromURL} from "~/utils/helpers";
 
 export default {
   components: {
@@ -117,7 +118,7 @@ export default {
     SchedulingCalendar, SignupModal, LoginModal, AuthModal, BaseInput, BaseModal, BaseButton, ServiceCard},
   mixins:[fetchBusinessServices],
   auth:false,
-  middleware:"reservation-protected",
+  // middleware:"reservation-protected",
   name: "booking",
   layout:"reservation-layout", //auto picks up from layout directory
   data() {
@@ -179,7 +180,14 @@ export default {
       return (this.$store.state.loggedInUserRole)
     }
   },
-
+  activated() {
+    if (this.$fetchState.timestamp <=  Date.now() - 30000) {
+      this.$fetch()
+    }
+  },
+  async fetch() {
+    await this.fetchBusinessServiceService()
+  },
   methods: {
     beforeServiceTabChange(){
       this.isServicesEmpty = !!this.selectedServices?.length <= 0
