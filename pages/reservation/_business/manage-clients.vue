@@ -107,14 +107,7 @@ export default {
   },
   computed:{
     cardDetails(){
-      if(this.$route.query?.q){
-        this.currentSelectedClient = this.businessClients.find(el=>el?._id === this.$route.query?.q)
-        if(!this.businessClients.find(el=>el?._id === this.$route.query?.q)){
-          this.currentSelectedClient = this.businessClients?.[0]
-        }
-      }else{
-        this.currentSelectedClient = this.businessClients?.[0]
-      }
+      this.mutateCurrentSelected(this.$route.query?.q)
       return this.businessClients?.map((el)=>{
         return {
           image:el?.profilePicture,
@@ -129,14 +122,7 @@ export default {
   },
   watch:{
     cardDetails(){
-      if(this.$route.query?.q){
-        this.currentSelectedClient = this.businessClients.find(el=>el?._id === this.$route.query?.q)
-        if(!this.businessClients.find(el=>el?._id === this.$route.query?.q)){
-          this.currentSelectedClient = this.businessClients?.[0]
-        }
-      }else{
-        this.currentSelectedClient = this.businessClients?.[0]
-      }
+      this.mutateCurrentSelected(this.$route.query?.q)
       return this.businessClients?.map((el)=>{
         return {
           image:el?.profilePicture,
@@ -149,17 +135,20 @@ export default {
       }) || []
     },
     '$route.query.q'(){
-      if(this.$route.query?.q){
-        this.currentSelectedClient = this.businessClients.find(el=>el?._id === this.$route.query?.q)
-        if(!this.businessClients.find(el=>el?._id === this.$route.query?.q)){
+      this.mutateCurrentSelected(this.$route.query?.q)
+    }
+  },
+  methods:{
+    mutateCurrentSelected(query){
+      if(query){
+        this.currentSelectedClient = this.businessClients.find(el=>el?._id === query)
+        if(!this.businessClients.find(el=>el?._id === query)){
           this.currentSelectedClient = this.businessClients?.[0]
         }
       }else{
         this.currentSelectedClient = this.businessClients?.[0]
       }
-    }
-  },
-  methods:{
+    },
     handleCardSelection({id}){
       this.currentSelectedClient = this.businessClients.find(el => el?._id === id)
     },

@@ -104,14 +104,7 @@ export default {
   },
   computed:{
     cardDetails(){
-      if(this.$route.query?.q){
-        this.currentSelectedProfessional = this.businessProfessionals.find(el=>el?._id === this.$route.query?.q)
-        if(!this.businessProfessionals.find(el=>el?._id === this.$route.query?.q)){
-          this.currentSelectedProfessional = this.businessProfessionals?.[0]
-        }
-      }else{
-        this.currentSelectedProfessional = this.businessProfessionals?.[0]
-      }
+      this.mutateCurrentSelected(this.$route.query?.q)
 
       return this.businessProfessionals?.map((el)=>{
         return {
@@ -125,14 +118,7 @@ export default {
   },
   watch:{
     cardDetails(){
-      if(this.$route.query?.q){
-        this.currentSelectedProfessional = this.businessProfessionals.find(el=>el?._id === this.$route.query?.q)
-        if(!this.businessProfessionals.find(el=>el?._id === this.$route.query?.q)){
-          this.currentSelectedProfessional = this.businessProfessionals?.[0]
-        }
-      }else{
-        this.currentSelectedProfessional = this.businessProfessionals?.[0]
-      }
+      this.mutateCurrentSelected(this.$route.query?.q)
       return this.businessProfessionals?.map((el)=>{
         return {
           image:el?.media,
@@ -143,17 +129,20 @@ export default {
       }) || []
     },
     '$route.query.q'(){
-      if(this.$route.query?.q){
-        this.currentSelectedProfessional = this.businessProfessionals.find(el=>el?._id === this.$route.query?.q)
-        if(!this.businessProfessionals.find(el=>el?._id === this.$route.query?.q)){
+      this.mutateCurrentSelected(this.$route.query?.q)
+    }
+  },
+  methods:{
+    mutateCurrentSelected(query) {
+      if(query){
+        this.currentSelectedProfessional = this.businessProfessionals.find(el=>el?._id === query)
+        if(!this.businessProfessionals.find(el=>el?._id === query)){
           this.currentSelectedProfessional = this.businessProfessionals?.[0]
         }
       }else{
         this.currentSelectedProfessional = this.businessProfessionals?.[0]
       }
-    }
-  },
-  methods:{
+    },
     handleCardSelection({id}){
       this.currentSelectedProfessional = this.businessProfessionals.find(el => el?._id === id)
     },
