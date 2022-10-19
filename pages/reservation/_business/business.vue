@@ -68,16 +68,14 @@ export default {
     await this.fetchBusinessSchedule()
     await this.fetchBusinessProfessionals()
     await this.fetchBusinessAllBookingsService()
+    if(process.client){
+      this.$refs.schedulingCalendar.unavailableSlots()
+    }
     await this.fetchBusinessBookingsService(false)
   },
   mounted() {
     this.$refs.schedulingCalendar.unavailableSlots()
   },
-  watch:{
-    'this.isFetchBusinessAllBookingsLoading'(){
-      console.log(this.$refs,"this.$refs")
-    }
-  }
 }
 </script>
 
