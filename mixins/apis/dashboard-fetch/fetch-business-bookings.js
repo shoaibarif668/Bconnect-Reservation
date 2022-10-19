@@ -1,16 +1,11 @@
 import {businessIdFromURL} from "~/utils/helpers";
 
 export const fetchBusinessBookings =  {
-  data(){
-    return{
-      businessBookings:[],
-    }
-  },
   methods:{
     async fetchBusinessBookingsService(isPrev){
       try{
         let response = await this.$api.get(`/booking/business/filter?businessId=${businessIdFromURL(this)}&page=1&limit=99&isPrevious=${isPrev}`)
-        this.businessBookings = response?.data?.data
+        this.bookings = response?.data?.data
       }
       catch (e) {
         console.log(e, "1")

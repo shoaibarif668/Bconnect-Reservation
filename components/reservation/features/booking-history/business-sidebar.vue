@@ -10,7 +10,7 @@
         <span>Add Professional</span>
       </base-button>
     </div>
-    <booking-list :appointment-type="appointment || ''" :bookings="[]"/>
+    <booking-list :appointment-type="appointment || ''" :bookings="bookingData"/>
   </div>
 </template>
 

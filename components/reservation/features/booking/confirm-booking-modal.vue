@@ -53,7 +53,7 @@ export default {
         return{
           professionalId: el?.professionalId,
           service: el?.serviceId,
-          startDateTime: `${new Date(el?.start).format('YYYY-MM-DD')}T${new Date(el?.start).format('HH:mm')}:00.000+00:00`
+          startDateTime: `${new Date(el?.start).format('YYYY-MM-DD')}T${new Date(el?.start).format('HH:mm')}:00.000Z`
         }
       })
       this.handleCreateBookingMixinSubmit(submitData,this.loggedInUserId)

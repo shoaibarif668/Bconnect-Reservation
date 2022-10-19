@@ -7,9 +7,9 @@
           <h3 class="text-dark__blue__cl text-2xl mb-5">Booking Statistics</h3>
         </div>
         <div class="grid grid-cols-3 gap-5 mb-7">
-          <dashboard-card :count="bookingStats.find(el=>el._id === 'Confirmed') && bookingStats.find(el=>el._id === 'Confirmed').count" name="Confirmed" :icon="['fa','check']"/>
+          <dashboard-card :count="stats.find(el=>el._id === 'Confirmed') && stats.find(el=>el._id === 'Confirmed').count" name="Confirmed" :icon="['fa','check']"/>
 <!--          <dashboard-card :count="0" name="Reserved" :icon="['fa','award']"/>-->
-          <dashboard-card :count="bookingStats.find(el=>el._id === 'Canceled') && bookingStats.find(el=>el._id === 'Canceled').count" name="Cancelled" :icon="['fa','xmark']"/>
+          <dashboard-card v-if="loggedInUserRole === roles.BUSINESS" :count="stats.find(el=>el._id === 'Canceled') && stats.find(el=>el._id === 'Canceled').count" name="Cancelled" :icon="['fa','xmark']"/>
         </div>
         <div class="flex items-center justify-between mb-5">
           <h3 class="text-dark__blue__cl text-2xl">Booking History - {{ selectedFilter }}</h3>
@@ -31,7 +31,7 @@
 
         <base-table :headers="tableHeaders">
           <tbody class="bg-white divide-y divide-gray-300 p-5" slot="table__body">
-          <tr v-for="(data,index) in history" :key="index">
+          <tr v-for="(data,index) in bookings" :key="data._id" v-if="(bookings && bookings.length > 0)">
             <td
               class="p-5 font-normal text-dark__blue__cl text-center border-r border-color-[#ECECEC] whitespace-nowrap"
             >
@@ -40,38 +40,63 @@
             <td
               class="p-5 font-normal text-dark__blue__cl text-center border-r border-color-[#ECECEC] whitespace-nowrap"
             >
-              {{ data.date }}
+              {{ `${data.startDateTime && data.startDateTime.split("T")[0]}` }}
             </td>
             <td
               class="p-5 font-normal text-dark__blue__cl text-center border-r border-color-[#ECECEC] whitespace-nowrap"
             >
-              {{ data.time }}
+              {{ `${!!(data.startDateTime && data.endDateTime) && data.startDateTime.split("T")[1].split('.')[0]} - ${data.endDateTime.split('T')[1].split('.')[0] }` }}
             </td>
             <td
               class="p-5 font-normal text-dark__blue__cl text-center border-r border-color-[#ECECEC] whitespace-nowrap"
             >
-              {{ data.services.join(', ') }}
+              {{ data.service ? data.service.name : ' - ' }}
             </td>
             <td
               class="p-5 font-normal text-center border-r border-color-[#ECECEC] whitespace-nowrap"
               :style="`color: #${Math.floor(Math.random()*16777215).toString(16)}`"
             >
-              {{ data.providers.join(', ') }}
+              {{ data.professional ? data.professional.name : ' - ' }}
             </td>
             <td
-              class="p-5 font-normal text-dark__blue__cl text-center border-r border-color-[#ECECEC] whitespace-nowrap"
+              class="p-5 font-normal text-center border-r border-color-[#ECECEC] whitespace-nowrap"
+              :style="`color: #${Math.floor(Math.random()*16777215).toString(16)}`"
             >
-              {{ data.isConfirmed ? 'Confirmed' : "Pending" }}
+              {{ data.customer ? data.customer.userName : ' - ' }}
+            </td>
+            <td
+              class="p-5 font-normal text-dark__blue__cl text-center border-r border-color-[#ECECEC] whitespace-nowrap flex items-center justify-between gap-2.5"
+            >
+              {{ data.status}}
+              <div  v-if="loggedInUserRole === roles.BUSINESS">
+                <dropdown>
+                  <template #toggler>
+                    <button
+                      class="relative flex items-center focus:outline-none text-primary__color font-normal text-lg"
+                    >
+                      <span></span>
+                      <font-awesome-icon class="text-blue__cl font-bold text-2xl" :icon="['fa','ellipsis']" />
+                    </button>
+                  </template>
+                  <dropdown-content>
+                    <dropdown-item custom-class="border-b pb-1.5" is-button :click-handler="()=>$router.push(`/reservation/${businessIdUrl}${routes.MANAGE_CLIENTS}?q=${data.customer ? data.customer._id : ''}`)" :loader="false">View Client Details</dropdown-item>
+                    <dropdown-item :custom-class="data.status !== 'Canceled' ? 'border-b pb-1.5' : ''" is-button :click-handler="()=>$router.push(`/reservation/${businessIdUrl}${routes.MANAGE_PROFESSIONALS}?q=${data.professional ? data.professional._id : ''}`)" :loader="false">View Professional</dropdown-item>
+<!--                    <dropdown-item v-if="data.status !== 'Canceled'" custom-class="border-b pb-1.5" is-button :click-handler="()=>{}" :loader="false">Reschedule Booking</dropdown-item>-->
+                    <dropdown-item v-if="data.status !== 'Canceled'" is-button :click-handler="()=>handleCancelBookingMixinSubmit(data._id)" :loader="isHandleCancelBookingLoading">Cancel Booking</dropdown-item>
+
+                  </dropdown-content>
+                </dropdown>
+              </div>
             </td>
           </tr>
           </tbody>
         </base-table>
       </div>
       <div v-if="loggedInUserRole === roles.CUSTOMER">
-        <customer-sidebar :appointment="selectedFilter" :booking-data="[]"/>
+        <customer-sidebar :appointment="selectedFilter" :booking-data="bookings"/>
       </div>
       <div v-if="loggedInUserRole === roles.BUSINESS">
-        <business-sidebar :appointment="selectedFilter" :booking-data="[]"/>
+        <business-sidebar :appointment="selectedFilter" :booking-data="bookings"/>
       </div>
     </div>
   </section>
@@ -88,10 +113,11 @@ import BookingCard from "~/components/reservation/common/cards/booking-card";
 import CustomerSidebar from "~/components/reservation/features/booking-history/customer-sidebar";
 import BusinessSidebar from "~/components/reservation/features/booking-history/business-sidebar";
 import {ROLES} from "~/utils/constants";
-import TokenService from "~/services/token.service";
-import {currentLoggedInUserRole} from "~/utils/helpers";
+import {businessIdFromURL, currentLoggedInUserRole} from "~/utils/helpers";
 import {batchingBookingsAndStats} from "~/mixins/apis/dashboard-fetch/batching-bookings-and-stats";
 import PageLoader from "~/components/reservation/common/loaders/page-loader";
+import {ROUTES} from "~/utils/constants/routes";
+import {handleCancelBooking} from "~/mixins/apis/dashboard/handle-cancel-booking";
 
 export default {
   name: "booking-history",
@@ -111,44 +137,32 @@ export default {
       return 'business-layout' // this.$nuxt.setLayout('business-layout')
     }
   },
-  mixins:[batchingBookingsAndStats],
+  mixins:[batchingBookingsAndStats,handleCancelBooking],
   data(){
     return{
       selectedFilter:'Upcoming',
-      tableHeaders:['S No.','Date','Time','Services','Provider','Status'],
+      tableHeaders:['S No.','Date','Time','Services','Provider','Name','Status'],
       loggedInUserRole : currentLoggedInUserRole(this.$cookies),
       roles : ROLES,
-      history:[
-        {
-          date:'09-05-2022',
-          time:'12:00-13:00',
-          services:['Nail Art','Hair Cut'],
-          providers:['Aly'],
-          isConfirmed:false
-        },
-        {
-          date:'11-05-2022',
-          time:'12:00-13:00',
-          services:['Nail Art','Hair Cut'],
-          providers:['John','Jason'],
-          isConfirmed:false
-        }
-      ],
+      bookings:[],
+      businessIdUrl : businessIdFromURL(this),
+      routes:ROUTES
     }
   },
-  // created() {
-  //   const loggedInUserRole = 'Customer' //From Cookies
-  //   console.log(this,"$nuxt")
-  //   if(loggedInUserRole === "Customer"){
-  //     this.$nuxt.setLayout('reservation-layout')
-  //   }else{
-  //     this.$nuxt.setLayout('business-layout')
-  //   }
-  // },
+  computed:{
+    isPrev(){
+      return this.selectedFilter !== 'Upcoming'
+    }
+  },
+  watch:{
+    isPrev(){
+      this.$fetch()
+    }
+  },
   methods:{
     onBookingFilterChange(filter){
       this.selectedFilter = filter
-    }
+    },
   }
 }
 </script>

@@ -1,16 +1,12 @@
 import {businessIdFromURL} from "~/utils/helpers";
+import TokenService from "~/services/token.service";
 
 export const fetchClientBookings =  {
-  data(){
-    return{
-      clientBookings:[],
-    }
-  },
   methods:{
     async fetchClientBookingsService(isPrev){
       try{
-        let response = await this.$api.get(`/booking/business/filter?businessId=${businessIdFromURL(this)}&page=1&limit=99&isPrevious=${isPrev}`)
-        this.clientBookings = response?.data?.data
+        let response = await this.$api.get(`booking/business/filter/customer?customerId=${TokenService.getUser(this.$cookies)?._id}&page=1&limit=99&isPrevious=${isPrev}`)
+        this.bookings = response?.data?.data
       }
       catch (e) {
         console.log(e, "1")

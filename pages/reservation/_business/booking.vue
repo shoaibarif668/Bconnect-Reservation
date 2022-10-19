@@ -246,7 +246,6 @@ export default {
       this.isLockBookingEditing = false
       this.isBookingCompleted = false
       this.$refs.wizard.reset()
-      console.log(this.activeTabIndex,"this.activeTabIndex")
       this.$fetch()
     }
   }

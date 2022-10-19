@@ -1,15 +1,16 @@
 import {businessIdFromURL} from "~/utils/helpers";
+import TokenService from "~/services/token.service";
 
-export const fetchBookingStats =  {
+export const fetchClientStats =  {
   data(){
     return{
       stats:[],
     }
   },
   methods:{
-    async fetchBookingStatsService(){
+    async fetchClientStatsService(){
       try{
-        let response = await this.$api.get(`/booking/stats?businessId=${businessIdFromURL(this)}`)
+        let response = await this.$api.get(`/booking/stats/customer?customerId=${TokenService.getUser(this.$cookies)?._id}`)
         this.stats = response.data?.data
       }
       catch (e) {

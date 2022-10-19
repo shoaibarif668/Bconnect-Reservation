@@ -38,12 +38,16 @@
       >
         <option value="" disabled selected>Working Days</option>
         <option
-          v-for="option in weekDays"
+          v-for="option in computedWeekDays"
           :value="option"
           :key="option"
           :selected="option === selectedWeekDay"
         >{{ option }}</option>
       </select>
+      <div class="w-full max-w-[400px] flex flex-col gap-1 items-start">
+        <small>*A single <i>work</i> schedule should be setup for a selected day.</small>
+        <small>*Multiple <i>breaks</i> can be set in a single day.</small>
+      </div>
 
       <div class="w-full text-left max-w-[400px]"  v-if="workingSchedule.length > 0 || false">
         <div v-for="(schedule,index) in workingSchedule" :class="index < workingSchedule.length - 1 ? 'mb-5' : ''">
@@ -77,7 +81,7 @@
             >
               <option value="" disabled selected>Select Schedule Type</option>
               <option
-                v-for="option in [professionalSchedule.WORK,professionalSchedule.BREAK]"
+                v-for="option in professionalScheduleTypeArray"
                 :value="option"
                 :key="option"
                 :selected="option === schedule['type']"
@@ -153,17 +157,15 @@ export default {
       // weekDays:['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'],
       selectedWeekDay:'',
       workingSchedule:[],
-
+      professionalScheduleTypeArray:[PROFESSIONAL_SCHEDULE.WORK,PROFESSIONAL_SCHEDULE.BREAK],
       validationError:"",
-
-      professionalSchedule:PROFESSIONAL_SCHEDULE,
     }
   },
-  // computed:{
-  //   weekDays(){
-  //     return this.businessSchedule.map((el)=>el?.day)
-  //   }
-  // },
+  computed:{
+    computedWeekDays(){
+      return this.businessSchedule.map((el)=>el?.day)
+    }
+  },
   created() {
     if(!this.professionalWorkingSchedule?.length > 0){
       return
@@ -175,7 +177,7 @@ export default {
         startEndTime:[el?.startTime,el?.endTime]
       }
     })
-    this.weekDays = this.weekDays.filter((el)=>el!==this.professionalWorkingSchedule.find(innerEl => innerEl?.day === el)?.day)
+    this.weekDays = this.computedWeekDays.filter((el)=>el!==this.professionalWorkingSchedule.find(innerEl => innerEl?.day === el)?.day)
   },
   methods: {
     handleAddProfessionalSubmit(){
@@ -224,6 +226,7 @@ export default {
         day:this.selectedWeekDay,
         startEndTime:[],
         type:'',
+        professionalSchedule:this.professionalScheduleTypeArray
       })
       this.selectedWeekDay = ''
     },

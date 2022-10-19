@@ -3,7 +3,7 @@
     <div class="mb-5 pb-5 border-b border-dark__blue__cl">
       <base-button :click-handler="()=>$router.push(`/reservation/${businessId()}${routes.BOOKING}`)">Book New Appointment</base-button>
     </div>
-    <booking-list :appointment-type="appointment || ''" :bookings="[]"/>
+    <booking-list :appointment-type="appointment || ''" :bookings="bookingData"/>
   </div>
 </template>
 

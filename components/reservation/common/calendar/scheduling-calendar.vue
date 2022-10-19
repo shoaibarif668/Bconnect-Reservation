@@ -54,7 +54,6 @@ export default {
     },
     currentService:{
       type:Object,
-      required:true,
       default:()=>{}
     },
     businessSchedule:{
