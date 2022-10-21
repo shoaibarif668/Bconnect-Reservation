@@ -23,7 +23,7 @@ export default {
   props:{
     appointmentType:String,
     bookings:Array
-  }
+  },
 }
 </script>
 

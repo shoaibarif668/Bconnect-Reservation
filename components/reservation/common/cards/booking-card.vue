@@ -31,6 +31,7 @@ import Dropdown from "~/components/reservation/common/dropdown/dropdown";
 import DropdownContent from "~/components/reservation/common/dropdown/dropdown-content";
 import DropdownItem from "~/components/reservation/common/dropdown/dropdown-item";
 import {MEDIA_BASEURL} from "~/utils/constants";
+import TokenService from "@/services/token.service";
 export default {
   name: "booking-card",
   components: {DropdownItem, DropdownContent, Dropdown},
@@ -57,7 +58,7 @@ export default {
   data(){
     return{
       mediaBaseUrl:MEDIA_BASEURL,
-      businessTitle:"Business Title"
+      businessTitle:TokenService.getBusiness(this.$cookies)?.business_name
     }
   }
 }
