@@ -16,6 +16,7 @@ export default {
   watch:{
     isUserLoggedIn(){
       this.isCustomerLoggedIn = (this.$store.state.loggedInUserRole === ROLES.CUSTOMER)
+
       if(this.isCustomerLoggedIn){
         this.userData = TokenService.getUser(this.$cookies)
       }

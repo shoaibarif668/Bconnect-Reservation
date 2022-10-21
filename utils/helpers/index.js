@@ -15,3 +15,11 @@ export const businessIdFromURL = (self) => {
 export const currentLoggedInUserRole = ($cookies) => {
   return  Object.keys(TokenService.getUser($cookies) || {}).includes('isBusiness') ? TokenService.getUser($cookies)?.isBusiness ? ROLES.BUSINESS : ROLES.CUSTOMER : null
 }
+
+export const userTimeZone = () => {
+  return Intl.DateTimeFormat().resolvedOptions().timeZone
+}
+
+export const dateFromUsersTimezone = (date) => {
+  return !!Date.parse(new Date(date)) ? new Date(date).toLocaleString('en-US', { timeZone: userTimeZone() }) : null
+}

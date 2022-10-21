@@ -23,7 +23,7 @@
           :duration="card.duration || ''"
           :joined="card.joined || ''"
           :card-type="card.cardType || ''"
-          :selected-card="currentSelectedCard === (card.name || '')"
+          :selected-card="currentSelectedCard === (card._id || '')"
           @handle-card-selection="handleCardSelection"
         />
       </div>
@@ -50,15 +50,15 @@ export default {
     return {
       routes: ROUTES,
       currentSelectedCard: this.$route.query?.q ?
-        this.cardDetails.find(el=>el?._id === this.$route.query?.q)?.name ?
-          this.cardDetails.find(el=>el?._id === this.$route.query?.q)?.name : this.cardDetails[0]?.name
-        : this.cardDetails[0]?.name,
+        this.cardDetails.find(el=>el?._id === this.$route.query?.q)?._id ?
+          this.cardDetails.find(el=>el?._id === this.$route.query?.q)?._id : this.cardDetails[0]?._id
+        : this.cardDetails[0]?._id,
       businessId : ()=>businessIdFromURL(this)
     }
   },
   methods:{
     handleCardSelection({name, id,media,duration}){
-      this.currentSelectedCard = name
+      this.currentSelectedCard = id
       this.$emit('handle-card-selection', {name, id, media, duration})
     }
   }

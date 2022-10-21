@@ -1,6 +1,5 @@
 import TokenService from "~/services/token.service";
 import {PUBLIC_ENDPOINTS} from "~/utils/constants";
-import {businessIdFromURL} from "~/utils/helpers";
 import {ROUTES} from "~/utils/constants/routes";
 
 export default function ({ $axios,app,redirect,route }, inject) {

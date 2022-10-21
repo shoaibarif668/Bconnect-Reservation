@@ -1,4 +1,4 @@
-import {businessIdFromURL} from "~/utils/helpers";
+import {businessIdFromURL, dateFromUsersTimezone} from "~/utils/helpers";
 
 export const fetchBookingsByService =  {
   data(){
@@ -14,8 +14,8 @@ export const fetchBookingsByService =  {
         let response = await this.$api.get(`/booking/business/service?businessId=${businessIdFromURL(this)}&serviceId=${serviceId}&page=1&limit=99`)
         this.businessBookingsByService = response?.data?.data?.map(el=>{
           return {
-            start:new Date(el?.startDateTime ? el.startDateTime : new Date()).format('YYYY-MM-DD HH:mm'),
-            end:new Date(el?.endDateTime ? el.endDateTime : new Date()).format('YYYY-MM-DD HH:mm'),
+            start:new Date(dateFromUsersTimezone(el?.startDateTime) ? dateFromUsersTimezone(el?.startDateTime) : new Date()).format('YYYY-MM-DD HH:mm'),
+            end:new Date(dateFromUsersTimezone(el?.endDateTime) ? dateFromUsersTimezone(el?.endDateTime) : new Date()).format('YYYY-MM-DD HH:mm'),
             title:'Booked',
             class:'booked',
             background: true,

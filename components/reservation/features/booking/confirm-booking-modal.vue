@@ -19,6 +19,7 @@ import {handleCreateBooking} from "~/mixins/apis/booking/handle-create-booking";
 import TokenService from "~/services/token.service";
 import ErrorMessage from "~/components/reservation/common/messages/error-message";
 import PrimaryLoader from "~/components/reservation/common/loaders/primary-loader";
+import {userTimeZone} from "@/utils/helpers";
 
 export default {
   name: "confirm-booking-modal",
@@ -53,6 +54,7 @@ export default {
         return{
           professionalId: el?.professionalId,
           service: el?.serviceId,
+          timezone:userTimeZone(),
           startDateTime: `${new Date(el?.start).format('YYYY-MM-DD')}T${new Date(el?.start).format('HH:mm')}:00.000Z`
         }
       })

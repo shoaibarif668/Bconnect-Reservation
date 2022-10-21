@@ -1,71 +1,78 @@
 <template>
-  <section class="mx-10 mb-5" >
-    <div class="grid grid-cols-dashboard__column gap-5 ">
-      <div class="bg-peach__bg w-full py-8 px-10 rounded-3xl">
-        <div class="flex items-center justify-between w-full">
-          <h3 class="text-dark__blue__cl text-2xl font-normal">Manage Clients</h3>
-<!--          <div>-->
-<!--            <base-button :click-handler="()=>{}" custom-classes="flex items-center gap-2 justify-center float-right">-->
-<!--              <font-awesome-icon :icon="['fa','user-plus']"/>-->
-<!--              <span>Add Client</span>-->
-<!--            </base-button>-->
-<!--          </div>-->
-        </div>
-        <div class="bg-white my-6 py-8 rounded-[24px]">
-          <div class="flex items-center justify-between w-full border-b border-gray__cl mb-7 pb-7 px-8">
-            <h4 class="text-dark__blue__cl text-xl font-normal">{{ currentSelectedClient && currentSelectedClient.userName }}'s Settings</h4>
-            <button @click="()=>{}" class="font-bold text-blue__cl hover:opacity-90">
-              <font-awesome-icon :icon="['fa','trash']"/>
-            </button>
+  <section>
+    <page-loader v-if="$fetchState.pending"/>
+    <div class="mx-10 mb-5">
+      <div class="grid grid-cols-dashboard__column gap-5 ">
+        <div class="bg-peach__bg w-full py-8 px-10 rounded-3xl">
+          <div class="flex items-center justify-between w-full">
+            <h3 class="text-dark__blue__cl text-2xl font-normal">Manage Clients</h3>
+            <!--          <div>-->
+            <!--            <base-button :click-handler="()=>{}" custom-classes="flex items-center gap-2 justify-center float-right">-->
+            <!--              <font-awesome-icon :icon="['fa','user-plus']"/>-->
+            <!--              <span>Add Client</span>-->
+            <!--            </base-button>-->
+            <!--          </div>-->
           </div>
+          <div class="bg-white my-6 py-8 rounded-[24px]">
+            <div class="flex items-center justify-between w-full border-b border-gray__cl mb-7 pb-7 px-8">
+              <h4 class="text-dark__blue__cl text-xl font-normal">{{ currentSelectedClient && currentSelectedClient.userName }}'s Settings</h4>
+              <button @click="()=>{}" class="font-bold text-blue__cl hover:opacity-90">
+                <font-awesome-icon :icon="['fa','trash']"/>
+              </button>
+            </div>
 
-          <div class="flex items-center justify-between border-b border-gray__cl mb-7 pb-7 px-8">
-            <div class="flex items-center gap-10">
+            <div class="flex items-center justify-between border-b border-gray__cl mb-7 pb-7 px-8">
+              <div class="flex items-center gap-10">
            <span class="bg-blue__bg p-2 rounded-full h-[32px] w-[32px] flex items-center justify-center">
               <font-awesome-icon class="text-white text-lg" :icon="['fa','angle-right']"/>
             </span>
-              <h5 class="text-dark__blue__cl text-xl font-normal">Client's Details</h5>
+                <h5 class="text-dark__blue__cl text-xl font-normal">Client's Details</h5>
+              </div>
+              <button @click="()=>handleViewClient(true)" class="font-normal text-blue__cl text-xl hover:opacity-90">View</button>
             </div>
-            <button @click="()=>handleViewClient(true)" class="font-normal text-blue__cl text-xl hover:opacity-90">View</button>
-          </div>
-<!--          <div class="flex items-center justify-between border-b border-gray__cl mb-7 pb-7 px-8">-->
-<!--            <div class="flex items-center gap-10">-->
-<!--           <span class="bg-blue__bg p-2 rounded-full h-[32px] w-[32px] flex items-center justify-center">-->
-<!--              <font-awesome-icon class="text-white text-lg" :icon="['fa','angle-right']"/>-->
-<!--            </span>-->
-<!--              <h5 class="text-dark__blue__cl text-xl font-normal">Reset Password</h5>-->
-<!--            </div>-->
-<!--            <button @click="()=>{}" class="font-normal text-blue__cl text-xl hover:opacity-90">Reset</button>-->
-<!--          </div>-->
-          <div class="flex items-center justify-between border-b border-gray__cl mb-7 pb-7 px-8">
-            <div class="flex items-center gap-10">
+            <!--          <div class="flex items-center justify-between border-b border-gray__cl mb-7 pb-7 px-8">-->
+            <!--            <div class="flex items-center gap-10">-->
+            <!--           <span class="bg-blue__bg p-2 rounded-full h-[32px] w-[32px] flex items-center justify-center">-->
+            <!--              <font-awesome-icon class="text-white text-lg" :icon="['fa','angle-right']"/>-->
+            <!--            </span>-->
+            <!--              <h5 class="text-dark__blue__cl text-xl font-normal">Reset Password</h5>-->
+            <!--            </div>-->
+            <!--            <button @click="()=>{}" class="font-normal text-blue__cl text-xl hover:opacity-90">Reset</button>-->
+            <!--          </div>-->
+            <div class="flex items-center justify-between border-b border-gray__cl mb-7 pb-7 px-8">
+              <div class="flex items-center gap-10">
             <span class="bg-blue__bg p-2 rounded-full h-[32px] w-[32px] flex items-center justify-center">
               <font-awesome-icon class="text-white text-lg" :icon="['fa','angle-right']"/>
             </span>
-              <h5 class="text-dark__blue__cl text-xl font-normal">Issue Promo Code</h5>
+                <h5 class="text-dark__blue__cl text-xl font-normal">Issue Promo Code</h5>
+              </div>
+              <button @click="()=>handleIssuePromoCode(true)" class="font-normal text-blue__cl text-xl hover:opacity-90">Issue</button>
             </div>
-            <button @click="()=>handleIssuePromoCode(true)" class="font-normal text-blue__cl text-xl hover:opacity-90">Issue</button>
           </div>
         </div>
+        <business-manage-sidebar
+          :key="$route.query.q ? $route.query.q : ''"
+          title="Clients"
+          @handle-card-selection="handleCardSelection"
+          :card-details="cardDetails"/>
       </div>
-      <business-manage-sidebar :key="$route.query.q ? $route.query.q : ''" title="Clients" @handle-card-selection="handleCardSelection" :card-details="cardDetails"/>
+
+      <!--   View Client Details Modal-->
+      <view-client-modal
+        :show-view-client-modal="showViewClientModal"
+        :client-detail="currentSelectedClient || {}"
+        @handle-view-client="handleViewClient"
+      />
+
+      <!--   Issue Promo Code Modal-->
+      <issue-promo-code-modal
+        :promo-codes="promoCodes || []"
+        :current-selected-client="currentSelectedClient || {}"
+        :show-issue-promo-code-modal="showIssuePromoCodeModal"
+        @handle-issue-promo-code="handleIssuePromoCode"
+        @confirm-issue="confirmIssuePromoCode"
+      />
     </div>
-
-    <!--   View Client Details Modal-->
-    <view-client-modal
-      :show-view-client-modal="showViewClientModal"
-      :client-detail="currentSelectedClient || {}"
-      @handle-view-client="handleViewClient"
-    />
-
-    <!--   Issue Promo Code Modal-->
-    <issue-promo-code-modal
-      :promo-codes="promoCodes || []"
-      :current-selected-client="currentSelectedClient || {}"
-      :show-issue-promo-code-modal="showIssuePromoCodeModal"
-      @handle-issue-promo-code="handleIssuePromoCode"
-      @confirm-issue="confirmIssuePromoCode"
-    />
   </section>
 </template>
 
@@ -84,10 +91,12 @@ import {
   batchingBusinessClientsAndPromoCodes
 } from "~/mixins/apis/settings-fetch/batching-business-clients-and-promo-codes";
 import IssuePromoCodeModal from "~/components/reservation/features/settings/manage-cients/issue-promo-code-modal";
+import PageLoader from "@/components/reservation/common/loaders/page-loader";
 
 export default {
   name: "manage-clients",
   components: {
+    PageLoader,
     IssuePromoCodeModal,
     ViewClientModal,
     BusinessManageSidebar,

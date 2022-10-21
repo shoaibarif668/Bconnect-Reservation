@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="tomorrowsDate">
     <vue-cal
       :disable-views="['years', 'year', 'month','week']"
       :hideWeekdays="unAvailableWorkingDays"
@@ -62,7 +62,6 @@ export default {
   },
   data() {
     return{
-      tomorrowsDate:new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
       currentCalDate:new Date(new Date().getTime() + 24 * 60 * 60 * 1000),
       events:this.existingEvents,
       newEvent:{},
@@ -88,6 +87,19 @@ export default {
     }
   },
   computed:{
+    tomorrowsDate(){
+      let localUnAvailableWorkingDays = this.unAvailableWorkingDays.map(el=>el === 7 ? 0 : el)
+      let completeWeekDaysKeys = Object.keys(this.weekDaysByNumber)
+      let tomorrow = ''
+      for(let i=0;i<completeWeekDaysKeys.length;i++){
+        if(!localUnAvailableWorkingDays.includes(new Date(new Date().getTime() + (24 * 60 * 60 * 1000)*(i+1)).getDay())){
+          tomorrow = new Date(new Date().getTime() + (24 * 60 * 60 * 1000)*(i+1))
+          break
+        }
+      }
+      this.currentCalDate = tomorrow
+      return tomorrow
+    },
     customDataSplitLabels(){
       return this.professionalsByService?.map((el,i)=>{
         return {

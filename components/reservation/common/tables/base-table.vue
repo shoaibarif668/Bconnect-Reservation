@@ -2,7 +2,7 @@
   <div class="flex flex-col">
     <div class="overflow-x-auto">
       <div class="w-full inline-block align-middle">
-        <div class="overflow-hidden border rounded-[40px]">
+        <div class="overflow-x-hidden overflow-y-auto border rounded-[40px]">
           <table class="min-w-full divide-y divide-[#ECECEC]">
             <thead class="bg-white">
             <tr class="p-10">

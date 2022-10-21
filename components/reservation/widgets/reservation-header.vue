@@ -6,7 +6,7 @@
     </div>
     <h1 class="text-4xl text-dark__blue__cl font-bold">The Saloon Shop</h1>
     <div v-if="!isCustomerLoggedIn"></div>
-    <top-bar-user-info :is-logged-in="isCustomerLoggedIn" :user-name="userData.userName || ''" :profile-picture="isCustomerLoggedIn.profilePicture || ''"/>
+    <top-bar-user-info :is-logged-in="isCustomerLoggedIn" :user-name="userData && userData.userName" :profile-picture="isCustomerLoggedIn && isCustomerLoggedIn.profilePicture"/>
   </div>
 </template>
 
