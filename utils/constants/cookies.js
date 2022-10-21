@@ -4,6 +4,6 @@
  */
 const cookieAuth = "session"
 const cookieData = "user"
-const cookieRefresh = "refresh"
+const cookieBusiness = "business"
 
-export {cookieData,cookieAuth,cookieRefresh}
+export {cookieData,cookieAuth,cookieBusiness}

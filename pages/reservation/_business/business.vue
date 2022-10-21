@@ -7,14 +7,14 @@
           <h3 class="text-dark__blue__cl text-2xl mb-5">Overview</h3>
 
         </div>
-        <div class="grid grid-cols-3 gap-5 mb-7">
-          <dashboard-card :count="31" name="Total Clients" :icon="['fa','users']"/>
-          <dashboard-card :count="4" name="Total Appointments" :icon="['fa','calendar']"/>
-          <dashboard-card count="**" name="Total Revenue" :icon="['fa','dollar-sign']"/>
-        </div>
-        <div class="flex items-center justify-between mb-5">
-          <h3 class="text-dark__blue__cl text-2xl">Appointments</h3>
-        </div>
+<!--        <div class="grid grid-cols-3 gap-5 mb-7">-->
+<!--          <dashboard-card :count="31" name="Total Clients" :icon="['fa','users']"/>-->
+<!--          <dashboard-card :count="4" name="Total Appointments" :icon="['fa','calendar']"/>-->
+<!--          <dashboard-card count="**" name="Total Revenue" :icon="['fa','dollar-sign']"/>-->
+<!--        </div>-->
+<!--        <div class="flex items-center justify-between mb-5">-->
+<!--          <h3 class="text-dark__blue__cl text-2xl">Appointments</h3>-->
+<!--        </div>-->
 
         <scheduling-calendar
           ref="schedulingCalendar"

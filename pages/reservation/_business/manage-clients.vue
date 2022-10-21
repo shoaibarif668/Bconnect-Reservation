@@ -30,15 +30,19 @@
               </div>
               <button @click="()=>handleViewClient(true)" class="font-normal text-blue__cl text-xl hover:opacity-90">View</button>
             </div>
-            <!--          <div class="flex items-center justify-between border-b border-gray__cl mb-7 pb-7 px-8">-->
-            <!--            <div class="flex items-center gap-10">-->
-            <!--           <span class="bg-blue__bg p-2 rounded-full h-[32px] w-[32px] flex items-center justify-center">-->
-            <!--              <font-awesome-icon class="text-white text-lg" :icon="['fa','angle-right']"/>-->
-            <!--            </span>-->
-            <!--              <h5 class="text-dark__blue__cl text-xl font-normal">Reset Password</h5>-->
-            <!--            </div>-->
-            <!--            <button @click="()=>{}" class="font-normal text-blue__cl text-xl hover:opacity-90">Reset</button>-->
-            <!--          </div>-->
+            <div class="flex items-center justify-between border-b border-gray__cl mb-7 pb-7 px-8">
+              <div class="flex items-center gap-10">
+                       <span class="bg-blue__bg p-2 rounded-full h-[32px] w-[32px] flex items-center justify-center">
+                          <font-awesome-icon class="text-white text-lg" :icon="['fa','angle-right']"/>
+                        </span>
+                <h5 class="text-dark__blue__cl text-xl font-normal">Reset Password</h5>
+              </div>
+              <button v-if="!isPasswordReset" @click="()=>handleResetPasswordMixinSubmit(currentSelectedClient && currentSelectedClient._id)" class="font-normal text-blue__cl text-xl hover:opacity-90">
+                <span v-if="!isHandleResetPasswordLoading">Reset</span>
+                <secondary-loader :is-loading="isHandleResetPasswordLoading"/>
+              </button>
+              <span v-if="isPasswordReset" class="font-normal text-blue__cl text-xl">Password Successfully Reset</span>
+            </div>
             <div class="flex items-center justify-between border-b border-gray__cl mb-7 pb-7 px-8">
               <div class="flex items-center gap-10">
             <span class="bg-blue__bg p-2 rounded-full h-[32px] w-[32px] flex items-center justify-center">
@@ -92,10 +96,15 @@ import {
 } from "~/mixins/apis/settings-fetch/batching-business-clients-and-promo-codes";
 import IssuePromoCodeModal from "~/components/reservation/features/settings/manage-cients/issue-promo-code-modal";
 import PageLoader from "@/components/reservation/common/loaders/page-loader";
+import {handleResetPassword} from "@/mixins/apis/settings/handle-reset-password";
+import PrimaryLoader from "@/components/reservation/common/loaders/primary-loader";
+import SecondaryLoader from "@/components/reservation/common/loaders/secondary-loader";
 
 export default {
   name: "manage-clients",
   components: {
+    SecondaryLoader,
+    PrimaryLoader,
     PageLoader,
     IssuePromoCodeModal,
     ViewClientModal,
@@ -106,12 +115,13 @@ export default {
   auth:false,
   layout:"business-layout",
   middleware:"reservation-protected",
-  mixins:[batchingBusinessClientsAndPromoCodes],
+  mixins:[batchingBusinessClientsAndPromoCodes,handleResetPassword],
   data(){
     return{
       currentSelectedClient:{},
       showViewClientModal:false,
       showIssuePromoCodeModal:false,
+      isPasswordReset:false,
     }
   },
   computed:{
@@ -159,6 +169,7 @@ export default {
       }
     },
     handleCardSelection({id}){
+      this.isPasswordReset = false
       this.currentSelectedClient = this.businessClients.find(el => el?._id === id)
     },
     handleIssuePromoCode(isActive){

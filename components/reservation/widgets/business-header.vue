@@ -2,7 +2,7 @@
   <div class="bg-peach__bg my-5 mx-10 p-5 border rounded-3xl flex items-center justify-between">
     <div class="flex gap-5 items-center">
       <menu-hamburger/>
-      <h1 class="text-2xl text-dark__blue__cl font-bold">The Saloon Shop</h1>
+      <h1 class="text-2xl text-dark__blue__cl font-bold capitalize">{{businessData && businessData.business_name}}</h1>
       <secondary-loader :is-loading="$fetch.pending"/>
       <div class="flex items-center gap-2.5" v-if="!$fetch.pending">
         <div class="bg-white flex items-center px-3">
@@ -57,6 +57,7 @@ import {
 } from "~/mixins/apis/settings-fetch/batching-business-professional-and-clients";
 import PrimaryLoader from "~/components/reservation/common/loaders/primary-loader";
 import SecondaryLoader from "~/components/reservation/common/loaders/secondary-loader";
+import TokenService from "@/services/token.service";
 
 export default {
   name: "business-header",
@@ -66,6 +67,7 @@ export default {
     return{
       professional:"",
       client:"",
+      businessData:TokenService.getBusiness(this.$cookies)
     }
   },
   methods:{

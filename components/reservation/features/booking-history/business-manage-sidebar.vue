@@ -59,6 +59,7 @@ export default {
   methods:{
     handleCardSelection({name, id,media,duration}){
       this.currentSelectedCard = id
+      console.log('here')
       this.$emit('handle-card-selection', {name, id, media, duration})
     }
   }

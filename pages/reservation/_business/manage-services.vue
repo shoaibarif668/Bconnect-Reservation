@@ -43,6 +43,7 @@
     />
     <!--   Edit Service Modal-->
     <edit-services-modal
+      :key="currentSelectedService && currentSelectedService._id"
       :service="currentSelectedService"
       :show-edit-services-modal="showEditServicesModal"
       @handle-edit-services="handleEditService"
@@ -126,6 +127,7 @@ export default {
   },
   methods:{
     handleCardSelection({name, id, media, duration}){
+      console.log({name, id, media, duration},'{name, id, media, duration}')
       this.currentSelectedService = {name,_id:id,media,durationEnding:duration}
     },
     handleAddService(isActive){

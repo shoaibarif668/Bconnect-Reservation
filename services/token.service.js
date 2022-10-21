@@ -1,4 +1,4 @@
-import {cookieAuth, cookieData} from "@/utils/constants/cookies";
+import {cookieAuth, cookieBusiness, cookieData} from "@/utils/constants/cookies";
 
 class TokenService {
     getLocalAccessToken = (cookies) => {
@@ -15,6 +15,14 @@ class TokenService {
         // localStorage.setItem(cookieData, JSON.stringify(user));
       cookies.set(cookieData, JSON.stringify(user));
     }
+
+    getBusiness = (cookies) => {
+      return cookies.get(cookieBusiness)
+    }
+    setBusiness = (data,cookies) => {
+      cookies.set(cookieBusiness, JSON.stringify(data));
+    }
+
     updateUser = (key, value) => {
         const userObject = this.getUser();
         userObject[key] = value;
