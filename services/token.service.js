@@ -23,10 +23,10 @@ class TokenService {
       cookies.set(cookieBusiness, JSON.stringify(data));
     }
 
-    updateUser = (key, value) => {
-        const userObject = this.getUser();
+    updateUser = (cookies,key, value) => {
+        const userObject = this.getUser(cookies);
         userObject[key] = value;
-        this.setUser(userObject);
+        this.setUser(userObject,cookies);
     }
 
     clearStorage = (cookies) => {

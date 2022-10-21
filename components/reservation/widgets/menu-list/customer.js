@@ -6,6 +6,9 @@ export const customer = [
     link:ROUTES.BOOKING,
   },
   {
+    title:"Settings"
+  },
+  {
     title:"Booking History",
     link:ROUTES.BOOKING_HISTORY,
   },

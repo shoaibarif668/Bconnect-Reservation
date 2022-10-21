@@ -52,6 +52,12 @@
     <login-modal :show-login-modal="showLoginModal" @handle-login="showLoginModal = false" />
     <!--    Signup Modal-->
     <signup-modal :show-signup-modal="showSignupModal" @handle-signup="showSignupModal = false"/>
+    <!--    Signup Modal-->
+    <personal-settings-modal
+      :show-settings-modal="showSettingsModal"
+      @handle-personal-settings-modal="handlePersonalSettingsModal"
+      @confirm-settings="showSettingsModal = false"
+    />
   </div>
 
 </template>
@@ -67,15 +73,17 @@ import {ROLES} from "~/utils/constants";
 import TokenService from "~/services/token.service";
 import {businessIdFromURL} from "~/utils/helpers";
 import {ROUTES} from "~/utils/constants/routes";
+import PersonalSettingsModal from "@/components/reservation/features/settings/personal-settings-modal";
 
 export default {
   name: "menu-hamburger",
-  components: {SignupModal, LoginModal, WebsiteLogo,site,business},
+  components: {PersonalSettingsModal, SignupModal, LoginModal, WebsiteLogo,site,business},
   data(){
     return{
       navOpen:false,
       showLoginModal:false,
       showSignupModal:false,
+      showSettingsModal:false,
       businessId:()=>businessIdFromURL(this),
       menuList:this.$store.state.loggedInUserRole ?  this.$store.state.loggedInUserRole === ROLES.BUSINESS ? business : customer : site,
       menuSubList:{'Manage Business':false}
@@ -84,7 +92,7 @@ export default {
   computed: {
     isUserLoggedIn () {
       return this.$store.state.loggedInUserRole
-    }
+    },
   },
   watch:{
     isUserLoggedIn(){
@@ -93,6 +101,7 @@ export default {
   },
   methods:{
     onMenuButtonClick(menuTitle) {
+      this.navOpen = false
       if(menuTitle === 'Login'){
         this.showLoginModal = true
       }else if(menuTitle === 'Logout'){
@@ -102,7 +111,13 @@ export default {
         this.navOpen = false
       }else if(menuTitle === 'Sign Up'){
         this.showSignupModal = true
+      }else if(menuTitle === 'Settings'){
+        console.log(menuTitle,"menuTitle")
+        this.showSettingsModal = true
       }
+    },
+    handlePersonalSettingsModal(isActive){
+      this.showSettingsModal = isActive
     }
   }
 }
