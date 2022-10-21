@@ -1,8 +1,8 @@
 <template>
   <client-only>
     <section class="mx-10 mb-5" >
-      <page-loader v-if="$fetchState.pending"/>
-      <div class="grid grid-cols-dashboard__column gap-5" v-if="!$fetchState.pending">
+      <page-loader v-if="$fetchState.pending || isFetchLoading"/>
+      <div class="grid grid-cols-dashboard__column gap-5" v-if="!$fetchState.pending && !isFetchLoading">
         <div class="bg-peach__bg w-full py-8 px-10 rounded-3xl">
           <div class="flex items-center justify-between">
             <h3 class="text-dark__blue__cl text-2xl mb-5">Booking Statistics</h3>
@@ -10,7 +10,7 @@
           <div class="grid grid-cols-3 gap-5 mb-7">
             <dashboard-card :count="stats.find(el=>el._id === 'Confirmed') && stats.find(el=>el._id === 'Confirmed').count" name="Confirmed" :icon="['fa','check']"/>
             <!--          <dashboard-card :count="0" name="Reserved" :icon="['fa','award']"/>-->
-            <dashboard-card v-if="loggedInUserRole === roles.BUSINESS" :count="stats.find(el=>el._id === 'Canceled') && stats.find(el=>el._id === 'Canceled').count" name="Cancelled" :icon="['fa','xmark']"/>
+            <dashboard-card v-if="loggedInUserRole === roles.BUSINESS" :count="stats.find(el=>el._id === 'Canceled') ?  (stats.find(el=>el._id === 'Canceled').count) : 0" name="Cancelled" :icon="['fa','xmark']"/>
           </div>
           <div class="flex items-center justify-between mb-5">
             <h3 class="text-dark__blue__cl text-2xl">Booking History - {{ selectedFilter }}</h3>
@@ -82,7 +82,7 @@
                     <dropdown-content>
                       <dropdown-item custom-class="border-b pb-1.5" is-button :click-handler="()=>$router.push(`/reservation/${businessIdUrl}${routes.MANAGE_CLIENTS}?q=${data.customer ? data.customer._id : ''}`)" :loader="false">View Client Details</dropdown-item>
                       <dropdown-item :custom-class="data.status !== 'Canceled' ? 'border-b pb-1.5' : ''" is-button :click-handler="()=>$router.push(`/reservation/${businessIdUrl}${routes.MANAGE_PROFESSIONALS}?q=${data.professional ? data.professional._id : ''}`)" :loader="false">View Professional</dropdown-item>
-                      <dropdown-item v-if="data.status !== 'Canceled'" custom-class="border-b pb-1.5" is-button :click-handler="()=>{}" :loader="false">Reschedule Booking</dropdown-item>
+                      <dropdown-item v-if="data.status !== 'Canceled' && data.service" custom-class="border-b pb-1.5" is-button :click-handler="()=>handleRescheduleBooking(true,data._id,data.service)" :loader="false">Reschedule Booking</dropdown-item>
                       <dropdown-item v-if="data.status !== 'Canceled'" is-button :click-handler="()=>handleCancelBookingMixinSubmit(data._id)" :loader="isHandleCancelBookingLoading">Cancel Booking</dropdown-item>
 
                     </dropdown-content>
@@ -100,6 +100,19 @@
           <business-sidebar :appointment="selectedFilter" :booking-data="bookings"/>
         </div>
       </div>
+      <!--    Confirm Booking Modal-->
+      <reschedule-booking-modal
+        :booking-id="bookingId"
+        :show-reschedule-booking-modal="showRescheduleBooking"
+
+        :current-service="selectedService"
+        :professionals-by-service="businessProfessionalsByService"
+        :existing-events="businessBookingsByService"
+        :business-schedule="businessSchedule && businessSchedule.schedule"
+
+        @handle-confirm-reschedule="handleConfirmReschedule"
+        @handle-reschedule-booking="handleRescheduleBooking"
+      />
     </section>
   </client-only>
 
@@ -121,10 +134,15 @@ import {batchingBookingsAndStats} from "~/mixins/apis/dashboard-fetch/batching-b
 import PageLoader from "~/components/reservation/common/loaders/page-loader";
 import {ROUTES} from "~/utils/constants/routes";
 import {handleCancelBooking} from "~/mixins/apis/dashboard/handle-cancel-booking";
+import RescheduleBookingModal from "@/components/reservation/features/booking-history/reschedule-booking-modal";
+import {fetchBusinessSchedule} from "@/mixins/apis/settings-fetch/fetch-business-schedule";
+import {fetchProfessionalsByService} from "@/mixins/apis/settings-fetch/fetch-professionals-by-service";
+import {fetchBookingsByService} from "@/mixins/apis/settings-fetch/fetch-bookings-by-service";
 
 export default {
   name: "booking-history",
   components: {
+    RescheduleBookingModal,
     PageLoader,
     BusinessSidebar,
     CustomerSidebar,
@@ -140,7 +158,7 @@ export default {
       return 'business-layout' // this.$nuxt.setLayout('business-layout')
     }
   },
-  mixins:[batchingBookingsAndStats,handleCancelBooking],
+  mixins:[batchingBookingsAndStats,handleCancelBooking,fetchBusinessSchedule,fetchProfessionalsByService,fetchBookingsByService],
   data(){
     return{
       selectedFilter:'Upcoming',
@@ -149,13 +167,20 @@ export default {
       roles : ROLES,
       bookings:[],
       businessIdUrl : businessIdFromURL(this),
-      routes:ROUTES
+      routes:ROUTES,
+      showRescheduleBooking:false,
+      bookingId:'',
+      selectedService:{},
+      isFetchLoading:false,
     }
   },
   computed:{
     isPrev(){
       return this.selectedFilter !== 'Upcoming'
     }
+  },
+  async mounted() {
+    await this.fetchBusinessSchedule()
   },
   watch:{
     isPrev(){
@@ -166,6 +191,21 @@ export default {
     onBookingFilterChange(filter){
       this.selectedFilter = filter
     },
+    async handleRescheduleBooking(isActive,bookingId,service){
+      console.log(isActive,bookingId,service,"isActive,userId,service")
+      if(service?._id){
+        this.isFetchLoading = true
+        await this.fetchBusinessProfessionalsByService(service?._id)
+        await this.fetchBusinessBookingsByService(service?._id)
+        this.isFetchLoading = false
+      }
+      this.showRescheduleBooking = isActive
+      this.bookingId = bookingId
+      this.selectedService = service
+    },
+    handleConfirmReschedule(){
+      this.$fetch()
+    }
   }
 }
 </script>

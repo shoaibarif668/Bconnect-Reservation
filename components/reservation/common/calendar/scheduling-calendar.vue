@@ -1,5 +1,5 @@
 <template>
-  <div v-if="tomorrowsDate">
+  <div v-if="tomorrowsDate" class="w-full">
     <vue-cal
       :disable-views="['years', 'year', 'month','week']"
       :hideWeekdays="unAvailableWorkingDays"
