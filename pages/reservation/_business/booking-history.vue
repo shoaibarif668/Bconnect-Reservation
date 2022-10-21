@@ -82,7 +82,7 @@
                     <dropdown-content>
                       <dropdown-item custom-class="border-b pb-1.5" is-button :click-handler="()=>$router.push(`/reservation/${businessIdUrl}${routes.MANAGE_CLIENTS}?q=${data.customer ? data.customer._id : ''}`)" :loader="false">View Client Details</dropdown-item>
                       <dropdown-item :custom-class="data.status !== 'Canceled' ? 'border-b pb-1.5' : ''" is-button :click-handler="()=>$router.push(`/reservation/${businessIdUrl}${routes.MANAGE_PROFESSIONALS}?q=${data.professional ? data.professional._id : ''}`)" :loader="false">View Professional</dropdown-item>
-                      <!--                    <dropdown-item v-if="data.status !== 'Canceled'" custom-class="border-b pb-1.5" is-button :click-handler="()=>{}" :loader="false">Reschedule Booking</dropdown-item>-->
+                      <dropdown-item v-if="data.status !== 'Canceled'" custom-class="border-b pb-1.5" is-button :click-handler="()=>{}" :loader="false">Reschedule Booking</dropdown-item>
                       <dropdown-item v-if="data.status !== 'Canceled'" is-button :click-handler="()=>handleCancelBookingMixinSubmit(data._id)" :loader="isHandleCancelBookingLoading">Cancel Booking</dropdown-item>
 
                     </dropdown-content>
