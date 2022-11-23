@@ -3,10 +3,10 @@ import TokenService from "~/services/token.service";
 
 export const fetchClientPreviousBookings =  {
   methods:{
-    async fetchClientPreviousBookingsService(isPrev){
+    async fetchClientPreviousBookingsService(customerId){
       try{
-        let response = await this.$api.get(`customer/business?businessId=1&page=1&limit=99`)
-        this.bookings = response?.data?.data?.map(el=>{
+        let response = await this.$api.get(`customer/recent?customerId=${customerId}&page=1&limit=3`)
+        this.previousBookings = response?.data?.data?.map(el=>{
           let startDate = dateFromUsersTimezone(el?.startDateTime) ? dateFromUsersTimezone(el?.startDateTime) : new Date()
           let endDate = dateFromUsersTimezone(el?.endDateTime) ? dateFromUsersTimezone(el?.endDateTime) : new Date()
 

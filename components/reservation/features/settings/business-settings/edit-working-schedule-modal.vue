@@ -27,16 +27,12 @@
             <label class="text-blue__cl text-sm ">Select Start Time ~ End Time</label>
             <date-picker
               type="time"
-              :time-picker-options="{
-                            start: '00:00',
-                            step: '00:30',
-                            end: '23:59',
-                          }"
+              :time-picker-options="{start: '00:00',step: '00:30',end: '23:59'}"
               range
               v-model="schedule['startEndTime']"
               valueType="format"
-              placeholder="HH:mm"
-              format="HH:mm"
+              placeholder="hh:mm a"
+              format="hh:mm a"
             ></date-picker>
           </div>
 <!--          <div class="flex flex-col gap-1">-->
@@ -66,6 +62,7 @@ import ErrorMessage from "~/components/reservation/common/messages/error-message
 import EditModal from "~/components/reservation/common/modal/edit-modal";
 import {handleAddBusinessSchedule} from "~/mixins/apis/settings/handle-add-business-schedule";
 import {handleEditBusinessSchedule} from "~/mixins/apis/settings/handle-edit-business-schedule";
+import {convertTime12to24, convertTime24to12} from "@/utils/helpers";
 
 export default {
   name: "edit-working-schedule-modal",
@@ -117,20 +114,25 @@ export default {
       return
     }
     this.workingSchedule = this.businessWorkingSchedule.map((el)=>{
+      //Converting 24-hour format to 12-hour, so it shows correctly on view
       return{
         day:el?.day,
-        startEndTime:[el?.startTime,el?.endTime]
+        startEndTime:[
+          parseInt(convertTime24to12(el?.startTime).split(":")[0]) < 10 ? `0${convertTime24to12(el?.startTime)}` : convertTime24to12(el?.startTime),
+          parseInt(convertTime24to12(el?.endTime).split(":")[0]) < 10 ? `0${convertTime24to12(el?.endTime)}` : convertTime24to12(el?.endTime),
+        ]
       }
     })
     this.weekDays = this.weekDays.filter((el)=>el!==this.businessWorkingSchedule.find(innerEl => innerEl?.day === el)?.day)
   },
   methods: {
     handleAddWorkingScheduleSubmit(){
+      //Converting 12-hour format to 24-hour format, so it sends correctly to the api
       let businessWorkingSchedule = this.workingSchedule.map((el)=>{
         return{
           ...el,
-          startTime:el?.startEndTime[0],
-          endTime:el?.startEndTime[1],
+          startTime:convertTime12to24(el?.startEndTime[0]),
+          endTime:convertTime12to24(el?.startEndTime[1]),
         }
       })
       if(this.workingSchedule?.length <= 0){

@@ -17,7 +17,11 @@ export const handleAddProfessional = {
           this.$emit('confirm-professional-added')
         })
         .catch((e)=>{
-          this.handleAddProfessionalError=viewError(e)
+          if(e.response?.status === 413){
+            this.handleAddProfessionalError= "File Size Too Large"
+          }else{
+            this.handleAddProfessionalError=viewError(e)
+          }
         })
         .finally(()=>{
           this.isHandleAddProfessionalLoading = false

@@ -5,6 +5,7 @@
       :hideWeekdays="unAvailableWorkingDays"
       active-view="day"
       :time-step="30"
+      :twelveHour="true"
       :time-to="time.endTime * 60"
       :time-from="time.startTime * 60"
       class="!h-fit"

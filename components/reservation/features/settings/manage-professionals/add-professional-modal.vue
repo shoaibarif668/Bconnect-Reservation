@@ -70,8 +70,8 @@
                 range
                 v-model="schedule['startEndTime']"
                 valueType="format"
-                placeholder="HH:mm"
-                format="HH:mm"
+                placeholder="hh:mm a"
+                format="hh:mm a"
               ></date-picker>
             </div>
             <select
@@ -115,6 +115,7 @@ import EditModal from "~/components/reservation/common/modal/edit-modal";
 import {handleAddProfessional} from "~/mixins/apis/settings/handle-add-professional";
 import {handleEditProfessional} from "~/mixins/apis/settings/handle-edit-professional";
 import {PROFESSIONAL_SCHEDULE} from "~/utils/constants";
+import {convertTime12to24, convertTime24to12} from "@/utils/helpers";
 
 export default {
   name: "add-professional-modal",
@@ -174,7 +175,10 @@ export default {
       return{
         day:el?.day,
         type:el?.type,
-        startEndTime:[el?.startTime,el?.endTime]
+        startEndTime:[
+          parseInt(convertTime24to12(el?.startTime).split(":")[0]) < 10 ? `0${convertTime24to12(el?.startTime)}` : convertTime24to12(el?.startTime),
+          parseInt(convertTime24to12(el?.endTime).split(":")[0]) < 10 ? `0${convertTime24to12(el?.endTime)}` : convertTime24to12(el?.endTime),
+        ]
       }
     })
     this.weekDays = this.computedWeekDays.filter((el)=>el!==this.professionalWorkingSchedule.find(innerEl => innerEl?.day === el)?.day)
@@ -191,8 +195,8 @@ export default {
       let businessWorkingSchedule = this.workingSchedule.map((el)=>{
         return{
           ...el,
-          startTime:el?.startEndTime[0],
-          endTime:el?.startEndTime[1],
+          startTime:convertTime12to24(el?.startEndTime[0]),
+          endTime:convertTime12to24(el?.startEndTime[1]),
         }
       })
       let mutatedSelectedServices = this.selectedServices.map(el=>el?._id)

@@ -1,17 +1,20 @@
 <template>
   <section>
-    <page-loader v-if="$fetchState.pending"/>
+    <page-loader v-if="$fetchState.pending || isSearchedClientsLoading"/>
     <div class="mx-10 mb-5">
       <div class="grid grid-cols-dashboard__column gap-5 ">
         <div class="bg-peach__bg w-full py-8 px-10 rounded-3xl">
           <div class="flex items-center justify-between w-full">
             <h3 class="text-dark__blue__cl text-2xl font-normal">Manage Clients</h3>
-            <!--          <div>-->
-            <!--            <base-button :click-handler="()=>{}" custom-classes="flex items-center gap-2 justify-center float-right">-->
-            <!--              <font-awesome-icon :icon="['fa','user-plus']"/>-->
-            <!--              <span>Add Client</span>-->
-            <!--            </base-button>-->
-            <!--          </div>-->
+            <div class="w-full max-w-[250px]">
+              <input
+                class="rounded focus-visible:outline-none text-blue__cl text-sm font-normal p-4 w-full bg-gray__bg w-full"
+                v-model="searchQuery"
+                placeholder="Search Clients"
+                type="text"
+                required
+              />
+            </div>
           </div>
           <div class="bg-white my-6 py-8 rounded-[24px]">
             <div class="flex items-center justify-between w-full border-b border-gray__cl mb-7 pb-7 px-8">
@@ -49,7 +52,7 @@
           </div>
         </div>
         <business-manage-sidebar
-          :key="$route.query.q ? $route.query.q : ''"
+          :key="$route.query.q ? $route.query.q : randomId"
           title="Clients"
           @handle-card-selection="handleCardSelection"
           :card-details="cardDetails"/>
@@ -57,6 +60,7 @@
 
       <!--   View Client Details Modal-->
       <view-client-modal
+        :key="currentSelectedClient ? currentSelectedClient._id : randomId2"
         :show-view-client-modal="showViewClientModal"
         :client-detail="currentSelectedClient || {}"
         @handle-view-client="handleViewClient"
@@ -94,6 +98,7 @@ import {handleResetPassword} from "@/mixins/apis/settings/handle-reset-password"
 import PrimaryLoader from "@/components/reservation/common/loaders/primary-loader";
 import SecondaryLoader from "@/components/reservation/common/loaders/secondary-loader";
 import BulletPointButton from "@/components/reservation/common/buttons/bullet-point-button";
+import {fetchSearchClients} from "@/mixins/apis/settings-fetch/fetch-search-clients";
 
 export default {
   name: "manage-clients",
@@ -111,19 +116,21 @@ export default {
   auth:false,
   layout:"business-layout",
   middleware:"reservation-protected",
-  mixins:[batchingBusinessClientsAndPromoCodes,handleResetPassword],
+  mixins:[fetchSearchClients,batchingBusinessClientsAndPromoCodes,handleResetPassword],
   data(){
     return{
       currentSelectedClient:{},
       showViewClientModal:false,
       showIssuePromoCodeModal:false,
       isPasswordReset:false,
+      searchQuery:""
     }
   },
   computed:{
     cardDetails(){
+      console.log(this.$route.query,"this.$route.query")
       this.mutateCurrentSelected(this.$route.query?.q)
-      return this.businessClients?.map((el)=>{
+      return this.searchedClientsList?.map((el)=>{
         return {
           image:el?.profilePicture,
           name:el?.userName,
@@ -133,12 +140,18 @@ export default {
           _id:el?._id,
         }
       }) || []
+    },
+    randomId(){
+      return Math.floor(Math.random() * 1000)
+    },
+    randomId2(){
+      return Math.floor(Math.random() * 1000)
     }
   },
   watch:{
     cardDetails(){
       this.mutateCurrentSelected(this.$route.query?.q)
-      return this.businessClients?.map((el)=>{
+      return this.searchedClientsList?.map((el)=>{
         return {
           image:el?.profilePicture,
           name:el?.userName,
@@ -151,22 +164,29 @@ export default {
     },
     '$route.query.q'(){
       this.mutateCurrentSelected(this.$route.query?.q)
+    },
+    async 'searchQuery'(){
+      console.log(this.searchQuery,"searchQuery")
+      await this.fetchSearchClientsService(this.searchQuery)
     }
+  },
+  async mounted() {
+    await this.fetchSearchClientsService("")
   },
   methods:{
     mutateCurrentSelected(query){
       if(query){
-        this.currentSelectedClient = this.businessClients.find(el=>el?._id === query)
-        if(!this.businessClients.find(el=>el?._id === query)){
-          this.currentSelectedClient = this.businessClients?.[0]
+        this.currentSelectedClient = this.searchedClientsList.find(el=>el?._id === query)
+        if(!this.searchedClientsList.find(el=>el?._id === query)){
+          this.currentSelectedClient = this.searchedClientsList?.[0]
         }
       }else{
-        this.currentSelectedClient = this.businessClients?.[0]
+        this.currentSelectedClient = this.searchedClientsList?.[0]
       }
     },
     handleCardSelection({id}){
       this.isPasswordReset = false
-      this.currentSelectedClient = this.businessClients.find(el => el?._id === id)
+      this.currentSelectedClient = this.searchedClientsList.find(el => el?._id === id)
     },
     handleIssuePromoCode(isActive){
       this.showIssuePromoCodeModal = isActive

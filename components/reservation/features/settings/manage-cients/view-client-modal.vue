@@ -9,15 +9,12 @@
           <h2 class="text-dark__blue__cl text-lg">Joined: <span class="font-bold">{{new Date(clientDetail ? clientDetail.createdAt : new Date()).toDateString()}}</span></h2>
           <h2 class="text-dark__blue__cl text-lg"> Phone Number: <span class="font-bold">{{clientDetail && clientDetail.phoneNumber}}</span></h2>
         </div>
-        <div class="mt-2.5">
+        <primary-loader :is-loading="$fetchState.pending"/>
+        <div class="mt-2.5" v-if="!($fetchState.pending) || (previousBookings && previousBookings.length > 0)">
+          <h2 class="text-dark__blue__cl text-2xl font-bold text-center pb-2.5">Recent Bookings</h2>
           <base-table :headers="tableHeaders">
             <tbody class="bg-white divide-y divide-gray-300 p-5" slot="table__body">
-            <tr v-for="(data,index) in bookings" :key="data._id" v-if="(bookings && bookings.length > 0)">
-              <td
-                class="p-5 font-normal text-dark__blue__cl text-center border-r border-color-[#ECECEC] whitespace-nowrap"
-              >
-                {{ index+1 }}
-              </td>
+            <tr v-for="(data,index) in previousBookings" :key="data._id">
               <td
                 class="p-5 font-normal text-dark__blue__cl text-center border-r border-color-[#ECECEC] whitespace-nowrap"
               >
@@ -49,25 +46,6 @@
                 class="p-5 font-normal text-dark__blue__cl text-center border-r border-color-[#ECECEC] whitespace-nowrap flex items-center justify-between gap-2.5"
               >
                 {{ data.status}}
-                <div  v-if="loggedInUserRole === roles.BUSINESS">
-                  <dropdown>
-                    <template #toggler>
-                      <button
-                        class="relative flex items-center focus:outline-none text-primary__color font-normal text-lg"
-                      >
-                        <span></span>
-                        <font-awesome-icon class="text-blue__cl font-bold text-2xl" :icon="['fa','ellipsis']" />
-                      </button>
-                    </template>
-                    <dropdown-content>
-                      <dropdown-item custom-class="border-b pb-1.5" is-button :click-handler="()=>$router.push(`/reservation/${businessIdUrl}${routes.MANAGE_CLIENTS}?q=${data.customer ? data.customer._id : ''}`)" :loader="false">View Client Details</dropdown-item>
-                      <dropdown-item :custom-class="data.status !== 'Canceled' ? 'border-b pb-1.5' : ''" is-button :click-handler="()=>$router.push(`/reservation/${businessIdUrl}${routes.MANAGE_PROFESSIONALS}?q=${data.professional ? data.professional._id : ''}`)" :loader="false">View Professional</dropdown-item>
-                      <dropdown-item v-if="data.status !== 'Canceled' && data.service" custom-class="border-b pb-1.5" is-button :click-handler="()=>handleRescheduleBooking(true,data._id,data.service)" :loader="false">Reschedule Booking</dropdown-item>
-                      <dropdown-item v-if="data.status !== 'Canceled'" is-button :click-handler="()=>handleCancelBookingMixinSubmit(data._id)" :loader="isHandleCancelBookingLoading">Cancel Booking</dropdown-item>
-
-                    </dropdown-content>
-                  </dropdown>
-                </div>
               </td>
             </tr>
             </tbody>
@@ -82,11 +60,13 @@ import EditModal from "~/components/reservation/common/modal/edit-modal";
 import {handleDeletePromoCode} from "~/mixins/apis/settings/handle-delete-promo-code";
 import {MEDIA_BASEURL} from "~/utils/constants";
 import BaseTable from "@/components/reservation/common/tables/base-table";
+import {fetchClientPreviousBookings} from "@/mixins/apis/settings-fetch/fetching-client-previous-bookings";
+import PrimaryLoader from "@/components/reservation/common/loaders/primary-loader";
 
 export default {
   name: "view-client-modal",
-  components: {BaseTable, EditModal},
-  mixins:[handleDeletePromoCode],
+  components: {PrimaryLoader, BaseTable, EditModal},
+  mixins:[handleDeletePromoCode,fetchClientPreviousBookings],
   props:{
     showViewClientModal:{
       type:Boolean
@@ -95,9 +75,19 @@ export default {
       type:Object
     }
   },
+  activated() {
+    if (this.$fetchState.timestamp <=  Date.now() - 30000) {
+      this.$fetch()
+    }
+  },
+  async fetch() {
+    await this.fetchClientPreviousBookingsService(this.clientDetail?._id)
+  },
   data(){
     return{
-      mediaBaseUrl:MEDIA_BASEURL
+      mediaBaseUrl:MEDIA_BASEURL,
+      tableHeaders:['Date','Time','Services','Provider','Name','Status'],
+      previousBookings:[]
     }
   }
 }

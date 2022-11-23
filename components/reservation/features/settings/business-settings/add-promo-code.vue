@@ -25,13 +25,10 @@
       <div class="w-full text-left max-w-[400px]">
         <date-picker
           type="datetime"
-          :time-picker-options="{
-                            start: '00:00',
-                            step: '01:00',
-                            end: '23:59',
-                          }"
+          :time-picker-options="{start: '00:00',step: '01:00',end: '23:59',}"
           range
           v-model="fieldsData['startEndTime']"
+          format="YYYY-MM-DD hh:mm a"
           valueType="format"
           placeholder="Select Date & Time Range For Expiry"
         ></date-picker>
@@ -86,6 +83,7 @@ export default {
         this.validationError = 'Please Select An Expiry Date Range To Continue'
         return
       }
+      console.log(this.fieldsData,"1 test");
       const submitData = {
         ...this.fieldsData,
         startDateTime:new Date(this.fieldsData.startEndTime?.[0]).toISOString() || null,

@@ -12,7 +12,7 @@
     </div>
     <h5 class="text-dark__blue__cl text-center pb-5 text-lg ">{{title}}</h5>
     <div class="flex flex-col items-center gap-5">
-      <div v-for="(card) in cardDetails" :key="card.name" class="w-full">
+      <div v-for="(card) in cardDetails" :key="card._id ? card._id : card.name" class="w-full">
         <user-card
           :image="card.image || ''"
           :name="card.name || ''"
