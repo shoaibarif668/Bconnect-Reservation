@@ -29,6 +29,9 @@
           class="rounded focus-visible:outline-none text-blue__cl text-sm font-normal p-4 w-full bg-gray__bg max-w-[400px]"
           @change="handleFileUpload"
         />
+        <div class="p-2.5 bg-gray-50" v-if="!!service.media || !!base64File">
+          <img :src="`${!!base64File ? base64File : `${mediaBaseUrl}${service.media}`}`" :alt="fieldsData.name"/>
+        </div>
       </div>
       <base-button is-submit-type custom-classes="w-full max-w-[400px] mt-5" v-if="!isHandleEditServiceLoading">
         Edit Service
@@ -47,6 +50,8 @@ import PrimaryLoader from "~/components/reservation/common/loaders/primary-loade
 import ErrorMessage from "~/components/reservation/common/messages/error-message";
 import EditModal from "~/components/reservation/common/modal/edit-modal";
 import {handleEditService} from "~/mixins/apis/settings/handle-edit-service";
+import {MEDIA_BASEURL} from "@/utils/constants";
+
 
 export default {
   name: "edit-services-modal",
@@ -64,11 +69,13 @@ export default {
   data() {
     return{
       file: this.service?.media,
+      base64File:"",
       fieldsData:{
         name:this.service?.name,
         durationStarting : 1,
         durationEnding : this.service?.durationEnding,
       },
+      mediaBaseUrl:MEDIA_BASEURL
     }
   },
   methods: {
@@ -89,6 +96,11 @@ export default {
       this.handleEditServiceMixinSubmit(formData,this.service?._id)
     },
     handleFileUpload(event){
+      const reader = new FileReader()
+      reader.readAsDataURL(event.target.files[0])
+      reader.onload = () => {
+        this.base64File = reader.result
+      };
       this.file = event.target.files[0];
     }
   }

@@ -13,9 +13,7 @@
 
           <div class="flex items-center justify-between border-b border-gray__cl mb-7 pb-7 px-8">
             <div class="flex items-center gap-10">
-           <span class="bg-blue__bg p-2 rounded-full h-[32px] w-[32px] flex items-center justify-center">
-              <font-awesome-icon class="text-white text-lg" :icon="['fa','angle-right']"/>
-            </span>
+              <bullet-point-button :click-handler="()=>handleEditWorkingSchedule(true)"/>
               <h5 class="text-dark__blue__cl text-xl font-normal">Business Working Schedule</h5>
             </div>
             <button @click="()=>handleEditWorkingSchedule(true)" class="font-normal text-blue__cl text-xl hover:opacity-90">
@@ -23,9 +21,7 @@
           </div>
           <div class="flex items-center justify-between border-b border-gray__cl mb-7 pb-7 px-8">
             <div class="flex items-center gap-10">
-            <span class="bg-blue__bg p-2 rounded-full h-[32px] w-[32px] flex items-center justify-center">
-              <font-awesome-icon class="text-white text-lg" :icon="['fa','angle-right']"/>
-            </span>
+              <bullet-point-button :click-handler="()=>handleManagePromoCodes(true)"/>
               <h5 class="text-dark__blue__cl text-xl font-normal">Promo Code & Discounts</h5>
             </div>
             <div class="flex items-center gap-2.5">
@@ -43,6 +39,7 @@
       @handle-edit-working-schedule="handleEditWorkingSchedule"
       :business-working-schedule="businessSchedule.schedule || []"
       :schedule-id="businessSchedule._id || ''"
+      :key="businessSchedule._id"
       @confirm-business-schedule="confirmBusinessSchedule"
     />
 
@@ -79,10 +76,12 @@ import AddPromoCode from "~/components/reservation/features/settings/business-se
 import {
   batchingBusinessScheduleAndPromoCodes
 } from "~/mixins/apis/settings-fetch/batching-business-schedule-and-promo-codes";
+import BulletPointButton from "@/components/reservation/common/buttons/bullet-point-button";
 
 export default {
   name: "business-settings",
   components: {
+    BulletPointButton,
     AddPromoCode,
     ManagePromoCodes,
     PageLoader,

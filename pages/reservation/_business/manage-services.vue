@@ -23,9 +23,7 @@
 
           <div class="flex items-center justify-between border-b border-gray__cl mb-7 pb-7 px-8">
             <div class="flex items-center gap-10">
-           <span class="bg-blue__bg p-2 rounded-full h-[32px] w-[32px] flex items-center justify-center">
-              <font-awesome-icon class="text-white text-lg" :icon="['fa','angle-right']"/>
-            </span>
+              <bullet-point-button :click-handler="()=>handleEditService(true)"/>
               <h5 class="text-dark__blue__cl text-xl font-normal">Service's Details</h5>
             </div>
             <button type="button" @click="()=>handleEditService(true)" class="font-normal text-blue__cl text-xl hover:opacity-90">Edit</button>
@@ -68,10 +66,12 @@ import AddServicesModal from "~/components/reservation/features/settings/manage-
 import {handleDeleteService} from "~/mixins/apis/settings/handle-delete-service";
 import PrimaryLoader from "~/components/reservation/common/loaders/primary-loader";
 import EditServicesModal from "~/components/reservation/features/settings/manage-services/edit-services-modal";
+import BulletPointButton from "@/components/reservation/common/buttons/bullet-point-button";
 
 export default {
   name: "manage-services",
   components: {
+    BulletPointButton,
     EditServicesModal,
     PrimaryLoader,
     AddServicesModal,

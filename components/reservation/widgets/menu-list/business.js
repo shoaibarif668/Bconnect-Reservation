@@ -6,6 +6,10 @@ export const business = [
     link:ROUTES.BUSINESS,
   },
   {
+    title:"Marketing",
+    externalLink:"https://bconnect-client.netlify.app/",
+  },
+  {
     title:"Booking",
     link:ROUTES.BOOKING,
   },

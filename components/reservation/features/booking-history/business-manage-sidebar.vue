@@ -3,11 +3,11 @@
     <div class="mb-5 pb-5 border-b border-dark__blue__cl flex flex-col gap-2.5">
       <base-button :click-handler="()=>$router.push(`/reservation/${businessId()}${routes.MANAGE_CLIENTS}`)" custom-classes="flex items-center gap-2 justify-center" :custom-classes="$route.fullPath === `/reservation/${businessId()}${routes.MANAGE_CLIENTS}` ? '!bg-white text-blue__cl' : ''">
         <font-awesome-icon :icon="['fa','user-plus']"/>
-        <span>Add Client</span>
+        <span>Manage Client</span>
       </base-button>
       <base-button :click-handler="()=>$router.push(`/reservation/${businessId()}${routes.MANAGE_PROFESSIONALS}`)" custom-classes="flex items-center gap-2 justify-center" :custom-classes="$route.fullPath === `/reservation/${businessId()}${routes.MANAGE_PROFESSIONALS}` ? '!bg-white text-blue__cl' : ''">
         <font-awesome-icon :icon="['fa','user-plus']"/>
-        <span>Add Professional</span>
+        <span>Manage Professional</span>
       </base-button>
     </div>
     <h5 class="text-dark__blue__cl text-center pb-5 text-lg ">{{title}}</h5>

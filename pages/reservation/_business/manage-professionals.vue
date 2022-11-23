@@ -23,9 +23,7 @@
 
           <div class="flex items-center justify-between border-b border-gray__cl mb-7 pb-7 px-8">
             <div class="flex items-center gap-10">
-            <span class="bg-blue__bg p-2 rounded-full h-[32px] w-[32px] flex items-center justify-center">
-              <font-awesome-icon class="text-white text-lg" :icon="['fa','angle-right']"/>
-            </span>
+              <bullet-point-button :click-handler="()=>handleEditProfessional(true)"/>
               <h5 class="text-dark__blue__cl text-xl font-normal">Professional's Details</h5>
             </div>
             <button @click="()=>handleEditProfessional(true)" class="font-normal text-blue__cl text-xl hover:opacity-90">Edit</button>
@@ -80,10 +78,12 @@ import AddProfessionalModal
   from "~/components/reservation/features/settings/manage-professionals/add-professional-modal";
 import {handleDeleteProfessional} from "~/mixins/apis/settings/handle-delete-professional";
 import PrimaryLoader from "~/components/reservation/common/loaders/primary-loader";
+import BulletPointButton from "@/components/reservation/common/buttons/bullet-point-button";
 
 export default {
   name: "manage-professionals",
   components: {
+    BulletPointButton,
     PrimaryLoader,
     AddProfessionalModal,
     PageLoader,

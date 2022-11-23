@@ -40,8 +40,12 @@
                 </ul>
               </div>
 <!--              For Buttons-->
-              <div v-if="!(menu.link || menu.children) || false" class="sidemenu__item p-8 shadow">
+              <div v-if="!(menu.link || menu.children || menu.externalLink) || false" class="sidemenu__item p-8 shadow">
                 <button class="text-dark__blue__cl text-xl font-bold" @click="()=>onMenuButtonClick(menu.title)">{{ menu.title }}</button>
+              </div>
+<!--              For External Links-->
+              <div v-if="!!menu.externalLink" class="sidemenu__item p-8 shadow">
+                <a class="text-dark__blue__cl text-xl font-bold" :href="menu.externalLink">Marketing</a>
               </div>
             </li>
           </ul>
@@ -97,7 +101,10 @@ export default {
   watch:{
     isUserLoggedIn(){
       this.menuList = this.$store.state.loggedInUserRole ?  this.$store.state.loggedInUserRole === ROLES.BUSINESS ? business : customer : site
-    }
+    },
+    $route() {
+      this.navOpen = false
+    },
   },
   methods:{
     onMenuButtonClick(menuTitle) {

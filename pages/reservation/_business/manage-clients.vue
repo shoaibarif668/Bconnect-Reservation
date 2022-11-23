@@ -23,18 +23,14 @@
 
             <div class="flex items-center justify-between border-b border-gray__cl mb-7 pb-7 px-8">
               <div class="flex items-center gap-10">
-           <span class="bg-blue__bg p-2 rounded-full h-[32px] w-[32px] flex items-center justify-center">
-              <font-awesome-icon class="text-white text-lg" :icon="['fa','angle-right']"/>
-            </span>
+                <bullet-point-button :click-handler="()=>handleViewClient(true)"/>
                 <h5 class="text-dark__blue__cl text-xl font-normal">Client's Details</h5>
               </div>
               <button @click="()=>handleViewClient(true)" class="font-normal text-blue__cl text-xl hover:opacity-90">View</button>
             </div>
             <div class="flex items-center justify-between border-b border-gray__cl mb-7 pb-7 px-8">
               <div class="flex items-center gap-10">
-                       <span class="bg-blue__bg p-2 rounded-full h-[32px] w-[32px] flex items-center justify-center">
-                          <font-awesome-icon class="text-white text-lg" :icon="['fa','angle-right']"/>
-                        </span>
+                <bullet-point-button :click-handler="()=>handleResetPasswordMixinSubmit(currentSelectedClient && currentSelectedClient._id)"/>
                 <h5 class="text-dark__blue__cl text-xl font-normal">Reset Password</h5>
               </div>
               <button v-if="!isPasswordReset" @click="()=>handleResetPasswordMixinSubmit(currentSelectedClient && currentSelectedClient._id)" class="font-normal text-blue__cl text-xl hover:opacity-90">
@@ -45,9 +41,7 @@
             </div>
             <div class="flex items-center justify-between border-b border-gray__cl mb-7 pb-7 px-8">
               <div class="flex items-center gap-10">
-            <span class="bg-blue__bg p-2 rounded-full h-[32px] w-[32px] flex items-center justify-center">
-              <font-awesome-icon class="text-white text-lg" :icon="['fa','angle-right']"/>
-            </span>
+                <bullet-point-button :click-handler="()=>handleIssuePromoCode(true)"/>
                 <h5 class="text-dark__blue__cl text-xl font-normal">Issue Promo Code</h5>
               </div>
               <button @click="()=>handleIssuePromoCode(true)" class="font-normal text-blue__cl text-xl hover:opacity-90">Issue</button>
@@ -99,10 +93,12 @@ import PageLoader from "@/components/reservation/common/loaders/page-loader";
 import {handleResetPassword} from "@/mixins/apis/settings/handle-reset-password";
 import PrimaryLoader from "@/components/reservation/common/loaders/primary-loader";
 import SecondaryLoader from "@/components/reservation/common/loaders/secondary-loader";
+import BulletPointButton from "@/components/reservation/common/buttons/bullet-point-button";
 
 export default {
   name: "manage-clients",
   components: {
+    BulletPointButton,
     SecondaryLoader,
     PrimaryLoader,
     PageLoader,
